@@ -186,8 +186,10 @@ const G = `
   }
   @media (max-width: 1100px){
     .nav-main-inner{padding-top:8px !important;padding-bottom:8px !important}
-    .nav-links{width:100%;order:3;justify-content:flex-start;gap:2px}
-    .nav-login{margin-left:auto !important}
+    .nav-main-head{width:100%;display:flex;align-items:center;justify-content:space-between;gap:10px}
+    .nav-actions{display:flex;align-items:center;gap:8px;margin-left:auto}
+    .nav-links{width:100%;justify-content:flex-start;gap:2px;overflow-x:auto;white-space:nowrap;padding-bottom:2px !important}
+    .nav-links a{flex:0 0 auto}
     .hero-grid,.video-grid,.map-grid,.match-grid,.about-grid{grid-template-columns:1fr !important;gap:22px !important}
     .steps-grid,.services-grid,.help-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
     .metrics-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
@@ -202,6 +204,8 @@ const G = `
     .hero-kpis>div{padding-right:0 !important;margin-right:0 !important;border-right:none !important;background:rgba(255,253,249,.75);border:1px solid #E8DFD0;border-radius:14px;padding:10px 8px !important}
     .hero-art{height:340px !important}
     .hero-pin{display:none !important}
+    .nav-actions .nav-demo-btn{display:none !important}
+    .nav-login{padding:8px 14px !important;font-size:.8rem !important}
     .steps-grid,.services-grid,.help-grid{grid-template-columns:1fr !important}
     .products-head{gap:10px !important}
     .products-tabs{width:100%;justify-content:flex-start}
@@ -211,12 +215,16 @@ const G = `
   @media (max-width: 560px){
     .nav-links a:nth-of-type(n+4){display:none}
     .nav-links{overflow-x:auto;padding-bottom:2px !important}
+    .brand-text{font-size:1.35rem !important}
+    .nav-login{padding:8px 12px !important}
     .hero-art{display:none !important}
     .hero-section{min-height:auto !important;padding-bottom:34px !important}
     .video-card{min-height:260px !important}
     .match-grid{gap:12px !important}
     .match-card,.match-result{padding:14px !important;border-radius:18px !important}
     .process-section,.services-section,.help-section,.products-section{padding-top:66px !important;padding-bottom:66px !important}
+    .a11y-dock{right:12px !important;bottom:92px !important}
+    .landing-toast{right:12px !important;left:12px !important;bottom:84px !important}
   }
   ::-webkit-scrollbar{width:5px}
   ::-webkit-scrollbar-thumb{background:#D4B896;border-radius:5px}
@@ -340,15 +348,22 @@ function Splash({onDone}){
 function Navbar({onLoginClick,onDemoClick}){
   const [scrolled,setScrolled]=useState(false);
   const [compact,setCompact]=useState(false);
+  const [mobile,setMobile]=useState(false);
   useEffect(()=>{
     const fn=()=>setScrolled(window.scrollY>40);
-    const rs=()=>setCompact(window.innerWidth<1024);
+    const rs=()=>{
+      const w=window.innerWidth;
+      setCompact(w<1024);
+      setMobile(w<700);
+    };
     window.addEventListener("scroll",fn);
     window.addEventListener("resize",rs);
     rs();
     return()=>{window.removeEventListener("scroll",fn);window.removeEventListener("resize",rs);};
   },[]);
-  const links=compact
+  const links=mobile
+    ?[["Conocenos","#conocenos"],["Video","#video-preview"],["Adoptar","#adoptar"]]
+    :compact
     ?[["Conocenos","#conocenos"],["Video","#video-preview"],["Adoptar","#adoptar"],["¿Tienes dudas?","#faq"]]
     :[["Conocenos","#conocenos"],["Video","#video-preview"],["Como funciona","#como-funciona"],["Servicios","#servicios"],["Productos","#productos"],["Adoptar","#adoptar"],["Guias","#recursos"],["¿Tienes dudas?","#faq"]];
   return(
@@ -382,25 +397,56 @@ function Navbar({onLoginClick,onDemoClick}){
         boxShadow:scrolled?`0 4px 24px ${C.shadow}`:"none",transition:"all .35s"
       }}>
         <div className="nav-main-inner" style={{maxWidth:1240,margin:"0 auto",padding:"0 5%",height:compact?"auto":72,minHeight:62,display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,flexWrap:compact?"wrap":"nowrap"}}>
-          <a href="#" style={{display:"flex",alignItems:"center",gap:10,textDecoration:"none"}}>
-            <LogoSVG size={compact?32:36} color={C.cafe}/>
-            <span style={{fontFamily:"'Fredoka',sans-serif",fontWeight:700,fontSize:compact?"1.45rem":"1.6rem",color:C.cafe}}>DOGOOD</span>
-          </a>
-          <div className="nav-links" style={{display:"flex",alignItems:"center",gap:4,overflowX:compact?"auto":"visible",maxWidth:compact?"100%":"none",paddingBottom:compact?4:0}}>
-            {links.map(([l,h])=>(
-              <a key={l} href={h} style={{padding:"8px 14px",borderRadius:50,fontWeight:700,fontSize:".88rem",color:"#5E5E5E",textDecoration:"none",transition:"all .2s"}}
-                onMouseEnter={e=>{e.currentTarget.style.background="#EFE7DC";e.currentTarget.style.color=C.cafe}}
-                onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.color="#5E5E5E";}}>
-                {l}
+          {compact?(
+            <>
+              <div className="nav-main-head">
+                <a href="#" style={{display:"flex",alignItems:"center",gap:10,textDecoration:"none"}}>
+                  <LogoSVG size={32} color={C.cafe}/>
+                  <span className="brand-text" style={{fontFamily:"'Fredoka',sans-serif",fontWeight:700,fontSize:"1.45rem",color:C.cafe}}>DOGOOD</span>
+                </a>
+                <div className="nav-actions">
+                  <button onClick={onDemoClick} className="paw-btn nav-demo-btn" style={{padding:"8px 12px",border:"1px solid #D9C2A8",borderRadius:50,background:C.cream,color:C.cafe,fontWeight:800,fontSize:".78rem",cursor:"pointer"}}>
+                    Demo
+                  </button>
+                  <button onClick={onLoginClick} className="paw-btn nav-login" style={{padding:"9px 16px",border:"none",borderRadius:50,background:C.cafe,color:C.white,fontWeight:800,fontSize:".84rem",cursor:"pointer",transition:"all .2s",boxShadow:`0 4px 14px ${C.shadowMd}`}}
+                    onMouseEnter={e=>{e.currentTarget.style.background=C.ink;e.currentTarget.style.transform="translateY(-1px)";}}
+                    onMouseLeave={e=>{e.currentTarget.style.background=C.cafe;e.currentTarget.style.transform="none";}}>
+                    Entrar
+                  </button>
+                </div>
+              </div>
+              <div className="nav-links" style={{display:"flex",alignItems:"center",gap:4,overflowX:"auto",maxWidth:"100%",paddingBottom:4}}>
+                {links.map(([l,h])=>(
+                  <a key={l} href={h} style={{padding:"8px 14px",borderRadius:50,fontWeight:700,fontSize:".88rem",color:"#5E5E5E",textDecoration:"none",transition:"all .2s"}}
+                    onMouseEnter={e=>{e.currentTarget.style.background="#EFE7DC";e.currentTarget.style.color=C.cafe}}
+                    onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.color="#5E5E5E";}}>
+                    {l}
+                  </a>
+                ))}
+              </div>
+            </>
+          ):(
+            <>
+              <a href="#" style={{display:"flex",alignItems:"center",gap:10,textDecoration:"none"}}>
+                <LogoSVG size={36} color={C.cafe}/>
+                <span style={{fontFamily:"'Fredoka',sans-serif",fontWeight:700,fontSize:"1.6rem",color:C.cafe}}>DOGOOD</span>
               </a>
-            ))}
-            {compact&&<button onClick={onDemoClick} className="paw-btn" style={{marginLeft:2,padding:"8px 14px",border:"1px solid #D9C2A8",borderRadius:50,background:C.cream,color:C.cafe,fontWeight:800,fontSize:".8rem",cursor:"pointer"}}>Demo</button>}
-            <button onClick={onLoginClick} className="paw-btn nav-login" style={{marginLeft:6,padding:"9px 22px",border:"none",borderRadius:50,background:C.cafe,color:C.white,fontWeight:800,fontSize:".88rem",cursor:"pointer",transition:"all .2s",boxShadow:`0 4px 14px ${C.shadowMd}`}}
-              onMouseEnter={e=>{e.currentTarget.style.background=C.ink;e.currentTarget.style.transform="translateY(-1px)";}}
-              onMouseLeave={e=>{e.currentTarget.style.background=C.cafe;e.currentTarget.style.transform="none";}}>
-              Iniciar sesion
-            </button>
-          </div>
+              <div className="nav-links" style={{display:"flex",alignItems:"center",gap:4}}>
+                {links.map(([l,h])=>(
+                  <a key={l} href={h} style={{padding:"8px 14px",borderRadius:50,fontWeight:700,fontSize:".88rem",color:"#5E5E5E",textDecoration:"none",transition:"all .2s"}}
+                    onMouseEnter={e=>{e.currentTarget.style.background="#EFE7DC";e.currentTarget.style.color=C.cafe}}
+                    onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.color="#5E5E5E";}}>
+                    {l}
+                  </a>
+                ))}
+              </div>
+              <button onClick={onLoginClick} className="paw-btn nav-login" style={{padding:"9px 22px",border:"none",borderRadius:50,background:C.cafe,color:C.white,fontWeight:800,fontSize:".88rem",cursor:"pointer",transition:"all .2s",boxShadow:`0 4px 14px ${C.shadowMd}`}}
+                onMouseEnter={e=>{e.currentTarget.style.background=C.ink;e.currentTarget.style.transform="translateY(-1px)";}}
+                onMouseLeave={e=>{e.currentTarget.style.background=C.cafe;e.currentTarget.style.transform="none";}}>
+                Iniciar sesion
+              </button>
+            </>
+          )}
         </div>
       </div>
     </nav>
@@ -1401,7 +1447,7 @@ function AccessibilityDock({fontScale,setFontScale,highContrast,setHighContrast,
   const [open,setOpen]=useState(false);
   const bump=(delta)=>setFontScale(v=>Math.max(92,Math.min(118,v+delta)));
   return(
-    <div style={{position:"fixed",right:16,bottom:16,zIndex:180,display:"flex",flexDirection:"column",alignItems:"flex-end",gap:8}}>
+    <div className="a11y-dock" style={{position:"fixed",right:16,bottom:16,zIndex:180,display:"flex",flexDirection:"column",alignItems:"flex-end",gap:8}}>
       {open&&(
         <div style={{width:260,background:"rgba(255,253,249,.96)",backdropFilter:"blur(10px)",border:`1.5px solid ${C.beigedk}`,borderRadius:16,padding:"12px 12px 10px",boxShadow:`0 14px 34px ${C.shadowMd}`}}>
           <div style={{fontSize:".74rem",fontWeight:800,color:C.cafeLt,textTransform:"uppercase",letterSpacing:1.2,marginBottom:8}}>Accesibilidad</div>
@@ -1436,7 +1482,7 @@ function LandingToast({msg,type="info"}){
   if(!msg)return null;
   const bg=type==="success"?C.cafe:type==="error"?"#B91C1C":"#2C1A0E";
   return(
-    <div style={{position:"fixed",right:18,bottom:18,zIndex:360,background:bg,color:C.white,padding:"11px 16px",borderRadius:12,fontSize:".82rem",fontWeight:800,boxShadow:`0 12px 28px ${C.shadowMd}`,animation:"fadeUp .25s ease"}}>
+    <div className="landing-toast" style={{position:"fixed",right:18,bottom:18,zIndex:360,background:bg,color:C.white,padding:"11px 16px",borderRadius:12,fontSize:".82rem",fontWeight:800,boxShadow:`0 12px 28px ${C.shadowMd}`,animation:"fadeUp .25s ease"}}>
       {msg}
     </div>
   );
