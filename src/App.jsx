@@ -477,6 +477,11 @@ export default function DoGood({initialUser=null,onLogout}){
   const [modal,setModal]=useState(null);
   const [loading,setLoading]=useState(false);
   const [sideCollapsed,setSideCollapsed]=useState(false);
+  const [isMobile,setIsMobile]=useState(false);
+  const [isTablet,setIsTablet]=useState(false);
+  const [userMenuOpen,setUserMenuOpen]=useState(false);
+  const userMenuRef=useRef(null);
+  const actionAudioRef=useRef({ctx:null,lastAt:0,unlocked:false});
 
   const [animals,setAnimals]=useState([]);
   const [solicitudes,setSolicitudes]=useState([]);
@@ -515,96 +520,83 @@ export default function DoGood({initialUser=null,onLogout}){
   const [eR,setER]=useState("Mestizo / Criollo");
 
   useEffect(()=>{
-    let audioCtx=null;
-    let lastAt=0;
-    let lastFxAt=0;
-    let audioUnlocked=false;
-    const ensureCtx=()=>{
-      if(audioCtx)return audioCtx;
-      const Ctx=window.AudioContext||window.webkitAudioContext;
-      if(!Ctx)return null;
-      audioCtx=new Ctx();
-      return audioCtx;
+    const sync=()=>{
+      const w=window.innerWidth;
+      setIsMobile(w<760);
+      setIsTablet(w<1120);
+      if(w<980)setSideCollapsed(true);
     };
-    const unlockAudio=()=>{
-      const ctx=ensureCtx();
-      if(!ctx)return null;
-      if(ctx.state==="suspended")ctx.resume().catch(()=>{});
-      audioUnlocked=true;
-      return ctx;
-    };
-    const tone=(ctx,{from,to,at,dur=.1,type="triangle",vol=.06})=>{
-      const o=ctx.createOscillator();
-      const g=ctx.createGain();
-      o.type=type;
-      o.frequency.setValueAtTime(from,at);
-      o.frequency.exponentialRampToValueAtTime(Math.max(60,to),at+dur);
-      g.gain.setValueAtTime(0.0001,at);
-      g.gain.exponentialRampToValueAtTime(vol,at+.01);
-      g.gain.exponentialRampToValueAtTime(0.0001,at+dur);
-      o.connect(g);g.connect(ctx.destination);
-      o.start(at);o.stop(at+dur+.02);
-    };
-    const playPet=(kind)=>{
-      const now=Date.now();
-      if(now-lastAt<140)return;
-      lastAt=now;
-      const ctx=ensureCtx();
-      if(!ctx)return;
-      const t=ctx.currentTime+.01;
-      if(kind==="guaf"){
-        tone(ctx,{from:250,to:170,at:t,dur:.1,type:"square",vol:.068});
-        tone(ctx,{from:230,to:145,at:t+.11,dur:.085,type:"square",vol:.052});
-      }else{
-        tone(ctx,{from:820,to:530,at:t,dur:.16,type:"sine",vol:.062});
-        tone(ctx,{from:540,to:440,at:t+.15,dur:.13,type:"sine",vol:.05});
-      }
-    };
-    const bubble=(x,y,text)=>{
-      const el=document.createElement("span");
-      el.className="pet-bubble";
-      el.textContent=text;
-      el.style.left=`${x}px`;
-      el.style.top=`${y}px`;
-      document.body.appendChild(el);
-      setTimeout(()=>el.remove(),900);
-    };
-    const fx=(btn,withSound=false)=>{
-      const now=Date.now();
-      if(now-lastFxAt<120)return;
-      lastFxAt=now;
-      const isDog=Math.random()>.5;
-      const r=btn.getBoundingClientRect();
-      bubble(r.left+Math.min(28,r.width*.35),r.top+6,isDog?"Guaf!":"Miau!");
-      if(withSound&&audioUnlocked)playPet(isDog?"guaf":"miau");
-    };
-    const onOver=e=>{
-      const btn=e.target?.closest?.("button");
-      if(!btn)return;
-      if(e.relatedTarget&&btn.contains(e.relatedTarget))return;
-      fx(btn,true);
-    };
-    const onPress=e=>{
-      const btn=e.target?.closest?.("button");
-      if(!btn)return;
-      if(typeof e.button==="number"&&e.button!==0)return;
-      unlockAudio();
-      fx(btn,true);
-    };
-    document.addEventListener("mouseover",onOver);
-    document.addEventListener("pointerdown",onPress,true);
-    return()=>{
-      document.removeEventListener("mouseover",onOver);
-      document.removeEventListener("pointerdown",onPress,true);
-      if(audioCtx&&audioCtx.state!=="closed")audioCtx.close().catch(()=>{});
-    };
+    sync();
+    window.addEventListener("resize",sync);
+    return()=>window.removeEventListener("resize",sync);
   },[]);
+
+  useEffect(()=>{
+    const onDown=()=>unlockActionAudio();
+    document.addEventListener("pointerdown",onDown,{once:true});
+    return()=>document.removeEventListener("pointerdown",onDown);
+  },[]);
+
+  useEffect(()=>{
+    const onDocClick=e=>{
+      if(!userMenuRef.current||userMenuRef.current.contains(e.target))return;
+      setUserMenuOpen(false);
+    };
+    document.addEventListener("mousedown",onDocClick);
+    return()=>document.removeEventListener("mousedown",onDocClick);
+  },[]);
+
+  useEffect(()=>()=>{actionAudioRef.current.ctx?.close?.().catch(()=>{});},[]);
+
+  const ensureActionAudioCtx=()=>{
+    if(actionAudioRef.current.ctx)return actionAudioRef.current.ctx;
+    const Ctx=window.AudioContext||window.webkitAudioContext;
+    if(!Ctx)return null;
+    actionAudioRef.current.ctx=new Ctx();
+    return actionAudioRef.current.ctx;
+  };
+  const unlockActionAudio=()=>{
+    const ctx=ensureActionAudioCtx();
+    if(!ctx)return null;
+    if(ctx.state==="suspended")ctx.resume().catch(()=>{});
+    actionAudioRef.current.unlocked=true;
+    return ctx;
+  };
+  const playActionFx=(kind="update")=>{
+    const now=Date.now();
+    if(now-actionAudioRef.current.lastAt<180)return;
+    actionAudioRef.current.lastAt=now;
+    const ctx=unlockActionAudio();
+    if(!ctx||!actionAudioRef.current.unlocked)return;
+    const tone=(from,to,at,dur=.1,type="triangle",vol=.055)=>{
+      const osc=ctx.createOscillator();
+      const gain=ctx.createGain();
+      osc.type=type;
+      osc.frequency.setValueAtTime(from,at);
+      osc.frequency.exponentialRampToValueAtTime(Math.max(70,to),at+dur);
+      gain.gain.setValueAtTime(0.0001,at);
+      gain.gain.exponentialRampToValueAtTime(vol,at+.01);
+      gain.gain.exponentialRampToValueAtTime(0.0001,at+dur);
+      osc.connect(gain);gain.connect(ctx.destination);
+      osc.start(at);osc.stop(at+dur+.02);
+    };
+    const t=ctx.currentTime+.01;
+    if(kind==="delete"){
+      tone(260,150,t,.12,"square",.07);
+      tone(180,110,t+.12,.11,"sawtooth",.052);
+      return;
+    }
+    tone(500,760,t,.1,"triangle",.06);
+    tone(760,980,t+.09,.08,"sine",.05);
+  };
 
   const toast$ = (msg,type="")=>{setToast({msg,type});setTimeout(()=>setToast(null),3000);};
   const goPage = p=>{
     setPage(p);
+    setUserMenuOpen(false);
     setModal(null);
     if(p!=="_edit")setEditAnimal(null);
+    if(isMobile)setSideCollapsed(true);
     window.scrollTo(0,0);
   };
 
@@ -680,10 +672,32 @@ export default function DoGood({initialUser=null,onLogout}){
     else toast$(r.error,"error");
   };
   const doLogout=()=>{
+    setUserMenuOpen(false);
     // If parent controls auth state (Root.jsx), hand off logout so we return to LandingPage + splash.
     if(typeof onLogout==="function"){onLogout();return;}
     // Fallback for standalone usage of this component.
     setUser(null);setPage("home");setModal(null);setAnimals([]);setSolicitudes([]);setFavs([]);
+  };
+  const openLogoutConfirm=()=>{
+    setUserMenuOpen(false);
+    setModal(
+      <Modal onClose={()=>setModal(null)}>
+        <div style={{padding:"24px 24px 20px"}}>
+          <div style={{fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:"1.4rem",color:T.ink,marginBottom:8}}>Cerrar sesion</div>
+          <p style={{fontSize:".9rem",color:T.sub,lineHeight:1.7,marginBottom:18}}>
+            Se cerrara tu cuenta actual y volveras a la pantalla principal de DoGood.
+          </p>
+          <div style={{display:"flex",gap:10,flexWrap:"wrap"}}>
+            <button onClick={()=>setModal(null)} style={{flex:1,minWidth:140,padding:"11px 16px",border:`1.5px solid ${T.border}`,borderRadius:T.r.md,background:T.surface,color:T.sub,fontWeight:700,cursor:"pointer"}}>
+              Cancelar
+            </button>
+            <button onClick={()=>{setModal(null);doLogout();}} style={{flex:1,minWidth:140,padding:"11px 16px",border:"none",borderRadius:T.r.md,background:"#B42318",color:"#fff",fontWeight:800,cursor:"pointer"}}>
+              Si, cerrar sesion
+            </button>
+          </div>
+        </div>
+      </Modal>
+    );
   };
 
   const toggleFav=async animalId=>{
@@ -699,6 +713,7 @@ export default function DoGood({initialUser=null,onLogout}){
   const resolverSol=async(solId,decision)=>{
     const r=await apiFetch("solicitudes","resolver","POST",{id:solId,decision});
     if(!r.ok){toast$("Error","error");return;}
+    playActionFx(decision==="Rechazada"?"delete":"update");
     toast$(decision==="Aprobada"?"Aprobada":"Rechazada","success");
     loadAnimals();loadSols();
   };
@@ -723,6 +738,7 @@ export default function DoGood({initialUser=null,onLogout}){
   const saveEdit=async()=>{
     const r=await apiFetch("animales","update","POST",{id:editAnimal.id,nombre:eN,raza:eR,estatus:eE,historia:eH});
     if(!r.ok){toast$("Error","error");return;}
+    playActionFx("update");
     toast$("Guardado","success");loadAnimals();goPage("catalogo");
   };
 
@@ -948,7 +964,7 @@ export default function DoGood({initialUser=null,onLogout}){
       {l:"Mis solicitudes",p:"mis-solicitudes",i:IC.clipboard},
     ],
   }[user.rol]||[];
-  const W = sideCollapsed ? 68 : 220;
+  const W = isMobile ? (sideCollapsed ? 0 : 220) : (sideCollapsed ? 68 : 220);
 
   /* == APP SHELL == */
   return(
@@ -956,7 +972,7 @@ export default function DoGood({initialUser=null,onLogout}){
       <style>{G}</style>
 
       {/* -- SIDEBAR -- */}
-      <aside style={{width:W,minWidth:W,maxWidth:W,background:T.surface,borderRight:`1.5px solid ${T.border}`,display:"flex",flexDirection:"column",position:"sticky",top:0,height:"100vh",transition:"width .25s",overflow:"hidden",flexShrink:0}}>
+      <aside style={{width:W,minWidth:W,maxWidth:W,background:T.surface,borderRight:`1.5px solid ${T.border}`,display:"flex",flexDirection:"column",position:isMobile?"fixed":"sticky",top:0,left:0,height:"100vh",transition:"width .25s, transform .25s",transform:isMobile&&sideCollapsed?"translateX(-100%)":"translateX(0)",overflow:"hidden",flexShrink:0,zIndex:isMobile?210:1,boxShadow:isMobile?"0 16px 40px rgba(0,0,0,.2)":"none"}}>
         {/* Logo */}
         <div style={{padding:"22px 18px 20px",borderBottom:`1px solid ${T.border}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
           {!sideCollapsed&&<div style={{fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:"1.4rem",color:"#7A5230",whiteSpace:"nowrap",overflow:"hidden"}}>DoGood</div>}
@@ -983,38 +999,56 @@ export default function DoGood({initialUser=null,onLogout}){
           })}
         </nav>
         {/* User */}
-        <div style={{padding:"14px 10px",borderTop:`1px solid ${T.border}`}}>
-          <button onClick={()=>goPage("perfil")} style={{width:"100%",padding:sideCollapsed?"10px":"10px 12px",border:"none",borderRadius:T.r.md,background:page==="perfil"?"#F3E8DA":"transparent",cursor:"pointer",display:"flex",alignItems:"center",gap:10,transition:"background .15s",justifyContent:sideCollapsed?"center":"flex-start"}}
+        <div ref={userMenuRef} style={{padding:"14px 10px",borderTop:`1px solid ${T.border}`,position:"relative"}}>
+          <button onClick={()=>{if(sideCollapsed){goPage("perfil");return;}setUserMenuOpen(v=>!v);}} style={{width:"100%",padding:sideCollapsed?"10px":"10px 12px",border:"none",borderRadius:T.r.md,background:page==="perfil"?"#F3E8DA":"transparent",cursor:"pointer",display:"flex",alignItems:"center",gap:10,transition:"background .15s",justifyContent:sideCollapsed?"center":"space-between"}}
             onMouseEnter={e=>{if(page!=="perfil")e.currentTarget.style.background="#FAF3E8"}}
             onMouseLeave={e=>{if(page!=="perfil")e.currentTarget.style.background="transparent"}}>
-            <div style={{width:30,height:30,borderRadius:"50%",background:`linear-gradient(135deg,#A67C52,#D4B896)`,color:"#fff",fontWeight:800,display:"flex",alignItems:"center",justifyContent:"center",fontSize:".76rem",flexShrink:0}}>{user.avatar}</div>
-            {!sideCollapsed&&<div style={{textAlign:"left",minWidth:0}}>
-              <div style={{fontSize:".8rem",fontWeight:700,color:T.ink,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{user.nombre.split(" ")[0]}</div>
-              <div style={{fontSize:".7rem",color:T.muted}}>{roleLabel(user.rol)}</div>
-            </div>}
+            <div style={{display:"flex",alignItems:"center",gap:10,minWidth:0}}>
+              <div style={{width:30,height:30,borderRadius:"50%",background:`linear-gradient(135deg,#A67C52,#D4B896)`,color:"#fff",fontWeight:800,display:"flex",alignItems:"center",justifyContent:"center",fontSize:".76rem",flexShrink:0}}>{user.avatar}</div>
+              {!sideCollapsed&&<div style={{textAlign:"left",minWidth:0}}>
+                <div style={{fontSize:".8rem",fontWeight:700,color:T.ink,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{user.nombre.split(" ")[0]}</div>
+                <div style={{fontSize:".7rem",color:T.muted}}>{roleLabel(user.rol)}</div>
+              </div>}
+            </div>
+            {!sideCollapsed&&<span style={{fontSize:".76rem",fontWeight:800,color:T.muted}}>{userMenuOpen?"▴":"▾"}</span>}
           </button>
+          {!sideCollapsed&&userMenuOpen&&(
+            <div style={{position:"absolute",left:10,right:10,bottom:"calc(100% + 8px)",background:T.surface,border:`1.5px solid ${T.border}`,borderRadius:T.r.md,boxShadow:T.shadow.lg,overflow:"hidden"}}>
+              <button onClick={()=>goPage("perfil")} style={{width:"100%",padding:"10px 12px",textAlign:"left",background:"transparent",border:"none",color:T.ink,fontWeight:700,cursor:"pointer"}}>
+                Ver perfil
+              </button>
+              <button onClick={openLogoutConfirm} style={{width:"100%",padding:"10px 12px",textAlign:"left",background:"transparent",border:"none",color:"#B42318",fontWeight:800,cursor:"pointer",borderTop:`1px solid ${T.border}`}}>
+                Cerrar sesion
+              </button>
+            </div>
+          )}
         </div>
       </aside>
 
       {/* -- MAIN CONTENT -- */}
-      <main style={{flex:1,minWidth:0,padding:"32px 36px",overflowY:"auto",
+      <main style={{flex:1,minWidth:0,padding:isMobile?"18px 14px 24px":isTablet?"24px 22px 28px":"32px 36px",overflowY:"auto",
         backgroundImage:`radial-gradient(circle at -10% 18%, rgba(122,82,48,.13) 0%, rgba(122,82,48,0) 34%),
         radial-gradient(circle at 108% 74%, rgba(20,20,20,.09) 0%, rgba(20,20,20,0) 38%),
         url("${DOODLE_BG}")`,
         backgroundSize:"900px 700px, 800px 700px, 260px 260px",
         backgroundPosition:"0 0, 100% 100%, 0 0",
         borderLeft:`1px solid ${T.border}`}}>
+        {isMobile&&sideCollapsed&&(
+          <button onClick={()=>setSideCollapsed(false)} style={{position:"sticky",top:10,zIndex:160,marginBottom:10,padding:"8px 12px",borderRadius:T.r.full,border:`1.5px solid ${T.border}`,background:T.surface,color:T.sub,fontWeight:800,fontSize:".78rem",cursor:"pointer"}}>
+            Menu
+          </button>
+        )}
 
         {/* HOME */}
         {page==="home"&&(
           <div style={{animation:"fadeUp .4s ease"}}>
             {/* Hero banner */}
-            <div style={{background:`linear-gradient(135deg, ${T.accentDk} 0%, #7A5230 100%)`,borderRadius:T.r.xl,padding:"40px 44px",marginBottom:24,position:"relative",overflow:"hidden",display:"flex",justifyContent:"space-between",alignItems:"center",gap:24}}>
+            <div style={{background:`linear-gradient(135deg, ${T.accentDk} 0%, #7A5230 100%)`,borderRadius:T.r.xl,padding:isMobile?"22px 18px":"40px 44px",marginBottom:24,position:"relative",overflow:"hidden",display:"flex",flexDirection:isMobile?"column":"row",justifyContent:"space-between",alignItems:isMobile?"flex-start":"center",gap:isMobile?14:24}}>
               <div style={{position:"absolute",top:-50,right:100,width:200,height:200,borderRadius:"50%",background:"rgba(255,255,255,.06)"}}/>
               <div style={{position:"absolute",bottom:-40,right:20,width:160,height:160,borderRadius:"50%",background:"rgba(255,255,255,.04)"}}/>
               <div style={{position:"relative"}}>
                 <div style={{fontSize:".76rem",fontWeight:700,letterSpacing:2,textTransform:"uppercase",color:"rgba(255,255,255,.5)",marginBottom:12}}>Bienvenido, {user.nombre.split(" ")[0]}</div>
-                <h1 style={{fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:"clamp(1.8rem,2.5vw,2.6rem)",color:"#fff",lineHeight:1.12,marginBottom:14}}>
+                <h1 style={{fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:isMobile?"clamp(1.7rem,9vw,2.1rem)":"clamp(1.8rem,2.5vw,2.6rem)",color:"#fff",lineHeight:1.12,marginBottom:14}}>
                   Dale un hogar,<br/>recibe amor infinito.
                 </h1>
                 <div style={{display:"flex",gap:10}}>
@@ -1028,11 +1062,11 @@ export default function DoGood({initialUser=null,onLogout}){
                   </button>}
                 </div>
               </div>
-              <div style={{fontSize:"5rem",filter:"drop-shadow(0 4px 16px rgba(0,0,0,.15))",flexShrink:0,lineHeight:1.2,position:"relative"}}>{IC.dog}<br/><span style={{fontSize:"4rem"}}>{IC.cat}</span></div>
+              {!isMobile&&<div style={{fontSize:"5rem",filter:"drop-shadow(0 4px 16px rgba(0,0,0,.15))",flexShrink:0,lineHeight:1.2,position:"relative"}}>{IC.dog}<br/><span style={{fontSize:"4rem"}}>{IC.cat}</span></div>}
             </div>
 
             {/* Stats row */}
-            <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:14,marginBottom:28}}>
+            <div style={{display:"grid",gridTemplateColumns:isMobile?"repeat(2,1fr)":"repeat(4,1fr)",gap:14,marginBottom:28}}>
               {[
                 [animals.filter(a=>a.estatus==="En adopción").length,"Disponibles",IC.leaf,T.accentDk],
                 [animals.filter(a=>a.estatus==="En proceso").length,"En proceso",IC.hourglass,"#8A6200"],
@@ -1050,7 +1084,7 @@ export default function DoGood({initialUser=null,onLogout}){
             </div>
 
             {/* Two columns: animals + facts */}
-            <div style={{display:"grid",gridTemplateColumns:"1fr 340px",gap:20}}>
+            <div style={{display:"grid",gridTemplateColumns:isTablet?"1fr":"1fr 340px",gap:20}}>
               <div>
                 <div style={{display:"flex",alignItems:"center",justifyContent:"space-between",marginBottom:16}}>
                   <h2 style={{fontFamily:"'Syne',sans-serif",fontSize:"1.3rem",fontWeight:800,color:T.ink}}>Esperando un hogar</h2>
@@ -1498,11 +1532,15 @@ export default function DoGood({initialUser=null,onLogout}){
                 </div>
               ))}
             </div>
-            <button onClick={doLogout} style={{padding:"10px 24px",border:`1.5px solid ${T.border}`,borderRadius:T.r.full,background:T.surface,color:"#C0392B",fontWeight:600,fontSize:".86rem",cursor:"pointer",transition:"all .15s"}}
-              onMouseEnter={e=>{e.currentTarget.style.background="#FEF2F2";e.currentTarget.style.borderColor="#FECACA"}}
-              onMouseLeave={e=>{e.currentTarget.style.background=T.surface;e.currentTarget.style.borderColor=T.border}}>
-              Cerrar sesion
-            </button>
+            <div style={{background:T.surface,border:`1.5px solid ${T.border}`,borderRadius:T.r.lg,padding:"14px 16px",display:"flex",alignItems:"center",justifyContent:"space-between",gap:12,flexWrap:"wrap"}}>
+              <div>
+                <div style={{fontSize:".72rem",fontWeight:800,color:T.muted,textTransform:"uppercase",letterSpacing:1}}>Cuenta</div>
+                <div style={{fontSize:".84rem",color:T.sub,marginTop:4}}>Gestiona tu sesion desde una accion segura.</div>
+              </div>
+              <button onClick={openLogoutConfirm} style={{padding:"10px 18px",border:`1.5px solid #FECACA`,borderRadius:T.r.full,background:"#FEF2F2",color:"#B42318",fontWeight:800,fontSize:".84rem",cursor:"pointer"}}>
+                Cerrar sesion
+              </button>
+            </div>
           </div>
         )}
 

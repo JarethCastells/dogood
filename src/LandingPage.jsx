@@ -180,8 +180,43 @@ const G = `
   .landing-shell.hc{filter:contrast(1.12) saturate(1.06)}
   .landing-shell.hc .hc-chip{background:${C.ink} !important;color:${C.white} !important;border-color:${C.white}55 !important}
   .landing-shell.rm *{animation:none !important;transition:none !important}
+  .hero-section,.video-section,.map-section,.match-section,.process-section,.services-section,.help-section,.products-section{position:relative}
   @media (prefers-reduced-motion: reduce){
     *{animation:none !important;transition:none !important}
+  }
+  @media (max-width: 1100px){
+    .nav-main-inner{padding-top:8px !important;padding-bottom:8px !important}
+    .nav-links{width:100%;order:3;justify-content:flex-start;gap:2px}
+    .nav-login{margin-left:auto !important}
+    .hero-grid,.video-grid,.map-grid,.match-grid,.about-grid{grid-template-columns:1fr !important;gap:22px !important}
+    .steps-grid,.services-grid,.help-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+    .metrics-grid{grid-template-columns:repeat(2,minmax(0,1fr)) !important}
+  }
+  @media (max-width: 780px){
+    .nav-top-inner{height:auto !important;padding-top:6px !important;padding-bottom:6px !important}
+    .nav-top-inner>div{font-size:.68rem !important}
+    .hero-section{padding-top:132px !important}
+    .hero-copy h1{font-size:clamp(2rem,10vw,3rem) !important;line-height:1.05 !important}
+    .hero-copy p{font-size:.98rem !important;max-width:100% !important}
+    .hero-kpis{display:grid !important;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px !important}
+    .hero-kpis>div{padding-right:0 !important;margin-right:0 !important;border-right:none !important;background:rgba(255,253,249,.75);border:1px solid #E8DFD0;border-radius:14px;padding:10px 8px !important}
+    .hero-art{height:340px !important}
+    .hero-pin{display:none !important}
+    .steps-grid,.services-grid,.help-grid{grid-template-columns:1fr !important}
+    .products-head{gap:10px !important}
+    .products-tabs{width:100%;justify-content:flex-start}
+    .faq-grid{grid-template-columns:1fr !important}
+    .footer-grid{grid-template-columns:1fr !important;gap:22px !important}
+  }
+  @media (max-width: 560px){
+    .nav-links a:nth-of-type(n+4){display:none}
+    .nav-links{overflow-x:auto;padding-bottom:2px !important}
+    .hero-art{display:none !important}
+    .hero-section{min-height:auto !important;padding-bottom:34px !important}
+    .video-card{min-height:260px !important}
+    .match-grid{gap:12px !important}
+    .match-card,.match-result{padding:14px !important;border-radius:18px !important}
+    .process-section,.services-section,.help-section,.products-section{padding-top:66px !important;padding-bottom:66px !important}
   }
   ::-webkit-scrollbar{width:5px}
   ::-webkit-scrollbar-thumb{background:#D4B896;border-radius:5px}
@@ -304,16 +339,27 @@ function Splash({onDone}){
 
 function Navbar({onLoginClick,onDemoClick}){
   const [scrolled,setScrolled]=useState(false);
-  useEffect(()=>{const fn=()=>setScrolled(window.scrollY>40);window.addEventListener("scroll",fn);return()=>window.removeEventListener("scroll",fn);},[]);
+  const [compact,setCompact]=useState(false);
+  useEffect(()=>{
+    const fn=()=>setScrolled(window.scrollY>40);
+    const rs=()=>setCompact(window.innerWidth<1024);
+    window.addEventListener("scroll",fn);
+    window.addEventListener("resize",rs);
+    rs();
+    return()=>{window.removeEventListener("scroll",fn);window.removeEventListener("resize",rs);};
+  },[]);
+  const links=compact
+    ?[["Conocenos","#conocenos"],["Video","#video-preview"],["Adoptar","#adoptar"],["¿Tienes dudas?","#faq"]]
+    :[["Conocenos","#conocenos"],["Video","#video-preview"],["Como funciona","#como-funciona"],["Servicios","#servicios"],["Productos","#productos"],["Adoptar","#adoptar"],["Guias","#recursos"],["¿Tienes dudas?","#faq"]];
   return(
     <nav style={{position:"fixed",top:0,left:0,right:0,zIndex:120,animation:"navDown .5s ease"}}>
       <div style={{background:`linear-gradient(90deg, ${C.ink}, ${C.cafe})`,borderBottom:"1px solid rgba(255,255,255,.08)"}}>
-        <div style={{maxWidth:1240,margin:"0 auto",padding:"0 5%",height:34,display:"flex",alignItems:"center",justifyContent:"space-between",gap:12}}>
+        <div className="nav-top-inner" style={{maxWidth:1240,margin:"0 auto",padding:"0 5%",height:34,display:"flex",alignItems:"center",justifyContent:"space-between",gap:12}}>
           <div style={{display:"flex",alignItems:"center",gap:8,color:"rgba(255,255,255,.86)",fontSize:".74rem",fontWeight:700}}>
             <span style={{width:7,height:7,borderRadius:"50%",background:"#B6B6B6",display:"inline-block"}}/>
             Ciudad de Mexico, MX
           </div>
-          <div style={{display:"flex",alignItems:"center",gap:8}}>
+          {!compact&&<div className="nav-top-right" style={{display:"flex",alignItems:"center",gap:8}}>
             <button onClick={onDemoClick} className="paw-btn" style={{padding:"4px 10px",borderRadius:50,border:"1px solid rgba(255,255,255,.25)",background:"rgba(255,255,255,.08)",color:"#FFFFFF",fontSize:".7rem",fontWeight:700,cursor:"pointer",transition:"all .2s"}}
               onMouseEnter={e=>{e.currentTarget.style.background="rgba(255,255,255,.18)";}}
               onMouseLeave={e=>{e.currentTarget.style.background="rgba(255,255,255,.08)";}}>
@@ -326,7 +372,7 @@ function Navbar({onLoginClick,onDemoClick}){
                 {n}
               </a>
             ))}
-          </div>
+          </div>}
         </div>
       </div>
 
@@ -335,20 +381,21 @@ function Navbar({onLoginClick,onDemoClick}){
         borderBottom:scrolled?`1.5px solid ${C.beigedk}`:"1.5px solid transparent",
         boxShadow:scrolled?`0 4px 24px ${C.shadow}`:"none",transition:"all .35s"
       }}>
-        <div style={{maxWidth:1240,margin:"0 auto",padding:"0 5%",height:72,display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <div className="nav-main-inner" style={{maxWidth:1240,margin:"0 auto",padding:"0 5%",height:compact?"auto":72,minHeight:62,display:"flex",alignItems:"center",justifyContent:"space-between",gap:10,flexWrap:compact?"wrap":"nowrap"}}>
           <a href="#" style={{display:"flex",alignItems:"center",gap:10,textDecoration:"none"}}>
-            <LogoSVG size={36} color={C.cafe}/>
-            <span style={{fontFamily:"'Fredoka',sans-serif",fontWeight:700,fontSize:"1.6rem",color:C.cafe}}>DOGOOD</span>
+            <LogoSVG size={compact?32:36} color={C.cafe}/>
+            <span style={{fontFamily:"'Fredoka',sans-serif",fontWeight:700,fontSize:compact?"1.45rem":"1.6rem",color:C.cafe}}>DOGOOD</span>
           </a>
-          <div style={{display:"flex",alignItems:"center",gap:4}}>
-            {[["Conocenos","#conocenos"],["Video","#video-preview"],["Como funciona","#como-funciona"],["Servicios","#servicios"],["Productos","#productos"],["Adoptar","#adoptar"],["Guias","#recursos"],["Tienes dudas?","#faq"]].map(([l,h])=>(
+          <div className="nav-links" style={{display:"flex",alignItems:"center",gap:4,overflowX:compact?"auto":"visible",maxWidth:compact?"100%":"none",paddingBottom:compact?4:0}}>
+            {links.map(([l,h])=>(
               <a key={l} href={h} style={{padding:"8px 14px",borderRadius:50,fontWeight:700,fontSize:".88rem",color:"#5E5E5E",textDecoration:"none",transition:"all .2s"}}
                 onMouseEnter={e=>{e.currentTarget.style.background="#EFE7DC";e.currentTarget.style.color=C.cafe}}
                 onMouseLeave={e=>{e.currentTarget.style.background="transparent";e.currentTarget.style.color="#5E5E5E";}}>
                 {l}
               </a>
             ))}
-            <button onClick={onLoginClick} className="paw-btn" style={{marginLeft:6,padding:"9px 22px",border:"none",borderRadius:50,background:C.cafe,color:C.white,fontWeight:800,fontSize:".88rem",cursor:"pointer",transition:"all .2s",boxShadow:`0 4px 14px ${C.shadowMd}`}}
+            {compact&&<button onClick={onDemoClick} className="paw-btn" style={{marginLeft:2,padding:"8px 14px",border:"1px solid #D9C2A8",borderRadius:50,background:C.cream,color:C.cafe,fontWeight:800,fontSize:".8rem",cursor:"pointer"}}>Demo</button>}
+            <button onClick={onLoginClick} className="paw-btn nav-login" style={{marginLeft:6,padding:"9px 22px",border:"none",borderRadius:50,background:C.cafe,color:C.white,fontWeight:800,fontSize:".88rem",cursor:"pointer",transition:"all .2s",boxShadow:`0 4px 14px ${C.shadowMd}`}}
               onMouseEnter={e=>{e.currentTarget.style.background=C.ink;e.currentTarget.style.transform="translateY(-1px)";}}
               onMouseLeave={e=>{e.currentTarget.style.background=C.cafe;e.currentTarget.style.transform="none";}}>
               Iniciar sesion
@@ -369,10 +416,10 @@ function Hero({onLoginClick,onDemoClick}){
     {emoji:E.guideDog,top:"44%",left:"1%",delay:.6,size:48},
   ];
   return(
-    <section style={{...sectionTexture(C.beigelt),minHeight:"100vh",display:"flex",alignItems:"center",padding:"122px 5% 40px",overflow:"hidden",position:"relative"}}>
+    <section className="hero-section" style={{...sectionTexture(C.beigelt),minHeight:"100vh",display:"flex",alignItems:"center",padding:"122px 5% 40px",overflow:"hidden",position:"relative"}}>
       <div style={{position:"absolute",inset:0,backgroundImage:`radial-gradient(circle, ${C.beigedk} 1px, transparent 1px)`,backgroundSize:"32px 32px",opacity:.35,pointerEvents:"none"}}/>
-      <div style={{maxWidth:1240,margin:"0 auto",width:"100%",display:"grid",gridTemplateColumns:"1fr 1fr",gap:40,alignItems:"center",position:"relative"}}>
-        <div>
+      <div className="hero-grid" style={{maxWidth:1240,margin:"0 auto",width:"100%",display:"grid",gridTemplateColumns:"1fr 1fr",gap:40,alignItems:"center",position:"relative"}}>
+        <div className="hero-copy">
           <div style={{display:"inline-flex",alignItems:"center",gap:8,background:C.beigedk,border:`1.5px solid ${C.cafeXlt}`,borderRadius:50,padding:"6px 18px",marginBottom:22,animation:"fadeUp .6s ease both"}}>
             <span style={{width:8,height:8,borderRadius:"50%",background:C.cafe,display:"block",animation:"pulseDot 1.8s infinite"}}/>
             <span style={{fontSize:".76rem",fontWeight:800,color:C.cafeMd,textTransform:"uppercase",letterSpacing:1.2}}>Adopcion responsable Mexico</span>
@@ -400,7 +447,7 @@ function Hero({onLoginClick,onDemoClick}){
               Conocenos
             </a>
           </div>
-          <div style={{display:"flex",gap:0,marginTop:40,animation:"fadeUp .7s .4s ease both",opacity:0}}>
+          <div className="hero-kpis" style={{display:"flex",gap:0,marginTop:40,animation:"fadeUp .7s .4s ease both",opacity:0}}>
             {[["100+","Animales rescatados"],["50+","Familias felices"],["10+","Refugios aliados"]].map(([n,l],i)=>(
               <div key={l} style={{flex:1,paddingRight:i<2?24:0,marginRight:i<2?24:0,borderRight:i<2?`1.5px solid ${C.beigedk}`:"none"}}>
                 <div style={{fontFamily:"'Fredoka',sans-serif",fontWeight:700,fontSize:"2.2rem",color:C.cafe,lineHeight:1}}>{n}</div>
@@ -409,7 +456,7 @@ function Hero({onLoginClick,onDemoClick}){
             ))}
           </div>
         </div>
-        <div style={{position:"relative",height:520,animation:"blobIn .9s .2s ease both",opacity:0}}>
+        <div className="hero-art" style={{position:"relative",height:520,animation:"blobIn .9s .2s ease both",opacity:0}}>
           <div style={{position:"absolute",top:"50%",right:"-8%",transform:"translateY(-50%)",width:"92%",height:"88%",
             background:`linear-gradient(145deg,${C.cafe},${C.cafeMd},${C.cafeLt})`,
             borderRadius:"62% 38% 46% 54% / 60% 44% 56% 40%",
@@ -417,7 +464,7 @@ function Hero({onLoginClick,onDemoClick}){
           <div style={{position:"absolute",bottom:"4%",right:"6%",fontSize:"10rem",lineHeight:1,filter:"drop-shadow(0 8px 24px rgba(0,0,0,.25))",zIndex:2,animation:"floatSlow 4s ease-in-out infinite"}}>{E.cat}</div>
           <div style={{position:"absolute",bottom:"6%",right:"34%",fontSize:"9rem",lineHeight:1,filter:"drop-shadow(0 8px 24px rgba(0,0,0,.2))",zIndex:2,animation:"floatSlow 4.5s ease-in-out infinite",animationDelay:".5s"}}>{E.dog}</div>
           {pins.map((p,i)=>(
-            <div key={i} style={{position:"absolute",zIndex:3,...(p.top?{top:p.top}:{}),...(p.bottom?{bottom:p.bottom}:{}),...(p.left!==undefined?{left:p.left}:{}),...(p.right!==undefined?{right:p.right}:{}),animation:`pinBounce ${2.2+i*.3}s ease-in-out infinite`,animationDelay:`${p.delay}s`}}>
+            <div key={i} className="hero-pin" style={{position:"absolute",zIndex:3,...(p.top?{top:p.top}:{}),...(p.bottom?{bottom:p.bottom}:{}),...(p.left!==undefined?{left:p.left}:{}),...(p.right!==undefined?{right:p.right}:{}),animation:`pinBounce ${2.2+i*.3}s ease-in-out infinite`,animationDelay:`${p.delay}s`}}>
               <div style={{width:p.size,height:p.size,borderRadius:"50% 50% 50% 50% / 60% 60% 40% 40%",background:C.cream,boxShadow:`0 6px 20px ${C.shadowMd}`,display:"flex",alignItems:"center",justifyContent:"center",fontSize:p.size*.4+"px",border:`3px solid ${C.white}`}}>{p.emoji}</div>
               <div style={{width:6,height:6,background:C.cafe,borderRadius:"50%",margin:"-2px auto 0",boxShadow:`0 0 0 3px ${C.cafeXlt}66`}}/>
             </div>
@@ -435,12 +482,12 @@ function VideoSection(){
   useReveal();
   const [videoError,setVideoError]=useState(false);
   return(
-    <section id="video-preview" style={{...sectionTexture(C.beigelt),padding:"74px 5% 60px",overflow:"hidden",position:"relative"}}>
+    <section id="video-preview" className="video-section" style={{...sectionTexture(C.beigelt),padding:"74px 5% 60px",overflow:"hidden",position:"relative"}}>
       <div style={{position:"absolute",top:20,right:"10%",width:120,height:120,borderRadius:"50%",background:`${C.cafeXlt}44`,animation:"driftGlow 8s ease-in-out infinite"}}/>
       <div style={{position:"absolute",bottom:20,left:"6%",width:90,height:90,borderRadius:"50%",background:`${C.beigedk}66`,animation:"driftGlow 10s ease-in-out infinite",animationDelay:".8s"}}/>
       <BoneShape w={78} h={20} style={{top:44,left:"34%",transform:"rotate(18deg)"}}/>
       <PawPrint size={36} style={{top:40,right:"30%",transform:"rotate(-10deg)"}}/>
-      <div style={{maxWidth:1240,margin:"0 auto",display:"grid",gridTemplateColumns:"1.05fr 1.2fr",gap:30,alignItems:"start"}}>
+      <div className="video-grid" style={{maxWidth:1240,margin:"0 auto",display:"grid",gridTemplateColumns:"1.05fr 1.2fr",gap:30,alignItems:"start"}}>
         <div className="reveal-left">
           <div style={{fontSize:".74rem",fontWeight:800,color:"#7A5230",textTransform:"uppercase",letterSpacing:1.6,marginBottom:10}}>Historias reales</div>
           <h2 style={{fontFamily:"'Fredoka',sans-serif",fontWeight:700,fontSize:"clamp(1.9rem,3.2vw,2.9rem)",color:C.ink,lineHeight:1.1,marginBottom:14}}>
@@ -452,7 +499,7 @@ function VideoSection(){
           </p>
         </div>
 
-        <div className="reveal-right" style={{position:"relative",borderRadius:26,overflow:"hidden",border:`2px solid ${C.white}`,boxShadow:`0 22px 56px ${C.shadowMd}`,background:"#121212",minHeight:340}}>
+        <div className="reveal-right video-card" style={{position:"relative",borderRadius:26,overflow:"hidden",border:`2px solid ${C.white}`,boxShadow:`0 22px 56px ${C.shadowMd}`,background:"#121212",minHeight:340}}>
           {!videoError?(
             <video autoPlay muted loop playsInline preload="metadata" onError={()=>setVideoError(true)} style={{width:"100%",height:"100%",display:"block",objectFit:"cover"}}>
               <source src="https://cdn.coverr.co/videos/coverr-dog-running-in-a-meadow-1579/1080p.mp4" type="video/mp4"/>
@@ -536,7 +583,7 @@ function LiveMetricsSection({onLoginClick}){
             Entrar al panel
           </button>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10}}>
+        <div className="metrics-grid" style={{display:"grid",gridTemplateColumns:"repeat(4,1fr)",gap:10}}>
           {[
             ["Disponibles",stats.disponibles,E.paw],
             ["Adoptados",stats.adoptados,E.heart],
@@ -736,8 +783,8 @@ function MapSection({onLoginClick}){
   const embedSrc=`https://www.google.com/maps?q=${encodeURIComponent(refugios[active].query)}&output=embed`;
 
   return(
-    <section style={{...sectionTexture(C.beigelt),padding:"90px 5%",overflow:"hidden"}}>
-      <div style={{maxWidth:1240,margin:"0 auto",display:"grid",gridTemplateColumns:"1fr 1fr",gap:64,alignItems:"center"}}>
+    <section className="map-section" style={{...sectionTexture(C.beigelt),padding:"90px 5%",overflow:"hidden"}}>
+      <div className="map-grid" style={{maxWidth:1240,margin:"0 auto",display:"grid",gridTemplateColumns:"1fr 1fr",gap:64,alignItems:"center"}}>
         <div className="reveal-left" style={{position:"relative",height:420,borderRadius:28,overflow:"hidden",boxShadow:`0 20px 56px ${C.shadowMd}`,border:`2px solid ${C.beigedk}`,background:C.cream}}>
           <iframe title="Mapa de refugios cercanos" src={embedSrc} loading="lazy" style={{position:"absolute",inset:0,width:"100%",height:"100%",border:0,filter:"grayscale(18%) contrast(1.04) saturate(.95)"}}/>
           <div style={{position:"absolute",inset:0,background:"linear-gradient(to top, rgba(242,237,228,.28) 0%, rgba(242,237,228,0) 35%, rgba(242,237,228,.12) 100%)",pointerEvents:"none"}}/>
@@ -797,14 +844,14 @@ function MatchQuizSection({onLoginClick}){
     :{title:"Match ideal: Gato",emoji:E.cat,desc:"Tu estilo encaja muy bien con un gatito tranquilo e independiente."};
 
   return(
-    <section style={{...sectionTexture(C.graySoft),padding:"86px 5%",position:"relative",overflow:"hidden"}}>
+    <section className="match-section" style={{...sectionTexture(C.graySoft),padding:"86px 5%",position:"relative",overflow:"hidden"}}>
       <div style={{maxWidth:1240,margin:"0 auto"}}>
         <div className="reveal" style={{textAlign:"center",marginBottom:28}}>
           <div style={{fontSize:".74rem",fontWeight:800,color:C.cafeLt,textTransform:"uppercase",letterSpacing:1.8,marginBottom:8}}>Comparador rapido</div>
           <h2 style={{fontFamily:"'Fredoka',sans-serif",fontWeight:700,fontSize:"clamp(1.8rem,3vw,2.7rem)",color:C.ink,lineHeight:1.15}}>Que peludito va contigo?</h2>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"1.2fr .8fr",gap:18,alignItems:"start"}}>
-          <div className="reveal-left" style={{background:C.cream,border:`1.5px solid ${C.beigedk}`,borderRadius:24,padding:20,boxShadow:`0 10px 28px ${C.shadow}`}}>
+        <div className="match-grid" style={{display:"grid",gridTemplateColumns:"1.2fr .8fr",gap:18,alignItems:"start"}}>
+          <div className="reveal-left match-card" style={{background:C.cream,border:`1.5px solid ${C.beigedk}`,borderRadius:24,padding:20,boxShadow:`0 10px 28px ${C.shadow}`}}>
             {questions.map((it,qi)=>(
               <div key={it.q} style={{marginBottom:14,paddingBottom:14,borderBottom:qi<questions.length-1?`1px dashed ${C.beigedk}`:"none"}}>
                 <div style={{fontWeight:800,color:C.sub,fontSize:".95rem",marginBottom:8}}>{qi+1}. {it.q}</div>
@@ -819,7 +866,7 @@ function MatchQuizSection({onLoginClick}){
               </div>
             ))}
           </div>
-          <div className="reveal-right" style={{background:`linear-gradient(155deg,${C.ink},${C.cafe})`,borderRadius:24,padding:22,color:C.white,border:`1.5px solid ${C.cafeLt}`,boxShadow:`0 14px 34px ${C.shadowMd}`}}>
+          <div className="reveal-right match-result" style={{background:`linear-gradient(155deg,${C.ink},${C.cafe})`,borderRadius:24,padding:22,color:C.white,border:`1.5px solid ${C.cafeLt}`,boxShadow:`0 14px 34px ${C.shadowMd}`}}>
             <div style={{fontSize:".74rem",textTransform:"uppercase",letterSpacing:1.2,color:"rgba(255,255,255,.66)",fontWeight:800}}>Resultado</div>
             {done?(
               <>
@@ -896,13 +943,13 @@ function ProcessSection(){
     ["3", "Recibe y acompana", "7-30 dias", "Hacemos seguimiento para una adopcion estable y feliz."],
   ];
   return(
-    <section id="como-funciona" style={{...sectionTexture(C.beige),padding:"84px 5%"}}>
+    <section id="como-funciona" className="process-section" style={{...sectionTexture(C.beige),padding:"84px 5%"}}>
       <div style={{maxWidth:1240,margin:"0 auto"}}>
         <div className="reveal" style={{textAlign:"center",marginBottom:24}}>
           <div style={{fontSize:".74rem",fontWeight:800,color:C.cafeLt,textTransform:"uppercase",letterSpacing:1.8,marginBottom:8}}>Confianza DoGood</div>
           <h2 style={{fontFamily:"'Fredoka',sans-serif",fontWeight:700,fontSize:"clamp(1.9rem,3vw,2.8rem)",color:C.cafe}}>Como funciona en 3 pasos</h2>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:12}}>
+        <div className="steps-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:12}}>
           {steps.map(([n,t,time,d],i)=>(
             <div key={n} className={`reveal float-card ${i%3===1?"alt":"soft"}`} style={{...floatCardAnim(i),background:C.cream,border:`1.5px solid ${C.beigedk}`,borderRadius:18,padding:"18px 16px",boxShadow:`0 8px 20px ${C.shadow}`}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
@@ -927,13 +974,13 @@ function HelpSection({onLoginClick}){
     {icon:E.homeCare,title:"Hogar temporal",desc:"Recibe por dias a un peludito en transicion.",cta:"Ser hogar temporal"},
   ];
   return(
-    <section style={{...sectionTexture(C.beigelt),padding:"84px 5%"}}>
+    <section className="help-section" style={{...sectionTexture(C.beigelt),padding:"84px 5%"}}>
       <div style={{maxWidth:1240,margin:"0 auto"}}>
         <div className="reveal" style={{textAlign:"center",marginBottom:24}}>
           <div style={{fontSize:".74rem",fontWeight:800,color:C.cafeLt,textTransform:"uppercase",letterSpacing:1.8,marginBottom:8}}>Quiero ayudar</div>
           <h2 style={{fontFamily:"'Fredoka',sans-serif",fontWeight:700,fontSize:"clamp(1.9rem,3vw,2.8rem)",color:C.cafe}}>Tambien puedes cambiar vidas sin adoptar</h2>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}}>
+        <div className="help-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}}>
           {items.map((it,i)=>(
             <div key={it.title} className={`reveal float-card ${i%3===1?"alt":"soft"}`} style={{...floatCardAnim(i),background:C.cream,border:`1.5px solid ${C.beigedk}`,borderRadius:20,padding:"20px 18px",boxShadow:`0 8px 20px ${C.shadow}`}}>
               <div style={{fontSize:"2rem",marginBottom:8}}>{it.icon}</div>
@@ -958,7 +1005,7 @@ function ServicesSection({onLoginClick}){
     {icon:E.train,title:"Entrenamiento basico",desc:"Rutina de obediencia, socializacion y habitos en casa.",time:"4 sesiones",tag:"Conducta"},
   ];
   return(
-    <section id="servicios" style={{...sectionTexture(C.graySoft),padding:"86px 5%",position:"relative",overflow:"hidden"}}>
+    <section id="servicios" className="services-section" style={{...sectionTexture(C.graySoft),padding:"86px 5%",position:"relative",overflow:"hidden"}}>
       <div style={{maxWidth:1240,margin:"0 auto"}}>
         <div className="reveal" style={{display:"flex",justifyContent:"space-between",gap:18,alignItems:"flex-end",flexWrap:"wrap",marginBottom:24}}>
           <div>
@@ -967,7 +1014,7 @@ function ServicesSection({onLoginClick}){
           </div>
           <p style={{maxWidth:370,fontSize:".9rem",lineHeight:1.7,color:C.sub}}>Integramos servicios aliados para que la adopcion tenga seguimiento y resultados reales.</p>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}}>
+        <div className="services-grid" style={{display:"grid",gridTemplateColumns:"repeat(3,1fr)",gap:14}}>
           {services.map((s,i)=>(
             <div key={s.title} className={`reveal float-card ${i%3===1?"alt":"soft"}`} style={{...floatCardAnim(i),background:C.cream,border:`1.5px solid ${C.beigedk}`,borderRadius:20,padding:"20px 18px",boxShadow:`0 8px 20px ${C.shadow}`}}>
               <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
@@ -1001,14 +1048,14 @@ function ProductsSection({onLoginClick}){
   ];
   const filtered=products.filter(p=>p.type===tab);
   return(
-    <section id="productos" style={{...sectionTexture(C.beige),padding:"86px 5%"}}>
+    <section id="productos" className="products-section" style={{...sectionTexture(C.beige),padding:"86px 5%"}}>
       <div style={{maxWidth:1240,margin:"0 auto"}}>
-        <div className="reveal" style={{display:"flex",justifyContent:"space-between",gap:18,alignItems:"flex-end",flexWrap:"wrap",marginBottom:18}}>
+        <div className="reveal products-head" style={{display:"flex",justifyContent:"space-between",gap:18,alignItems:"flex-end",flexWrap:"wrap",marginBottom:18}}>
           <div>
             <div style={{fontSize:".74rem",fontWeight:800,color:C.cafeLt,textTransform:"uppercase",letterSpacing:1.8,marginBottom:8}}>Recomendados</div>
             <h2 style={{fontFamily:"'Fredoka',sans-serif",fontWeight:700,fontSize:"clamp(1.9rem,3vw,2.8rem)",color:C.cafe}}>Productos segun su perfil</h2>
           </div>
-          <div style={{display:"flex",gap:8}}>
+          <div className="products-tabs" style={{display:"flex",gap:8}}>
             {[["perro","Perros"],["gato","Gatos"]].map(([v,l])=>(
               <button key={v} onClick={()=>setTab(v)} className="paw-btn" style={{padding:"8px 14px",borderRadius:999,border:`1.5px solid ${tab===v?C.cafe:C.beigedk}`,background:tab===v?C.cafe:C.cream,color:tab===v?C.white:C.sub,fontWeight:800,fontSize:".82rem",cursor:"pointer"}}>
                 {l}
@@ -1094,7 +1141,7 @@ function ConocenosSection(){
           <h2 style={{fontFamily:"'Fredoka',sans-serif",fontWeight:700,fontSize:"clamp(1.9rem,3vw,2.8rem)",color:C.cafe,lineHeight:1.1,marginBottom:14}}>Por que DoGood?</h2>
           <p style={{fontSize:".95rem",color:C.sub,maxWidth:480,margin:"0 auto",lineHeight:1.8}}>Creemos que cada animal merece una familia y cada familia merece encontrar a su companero ideal.</p>
         </div>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:40,alignItems:"center"}}>
+        <div className="about-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:40,alignItems:"center"}}>
           <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:18}}>
             {cards.map((c,i)=>(
               <div key={i} className={`reveal float-card ${i%3===1?"alt":"soft"}`} style={{...floatCardAnim(i),background:C.cream,borderRadius:22,padding:"22px 20px",boxShadow:`0 4px 20px ${C.shadow}`,border:`1.5px solid ${C.beigedk}`,transition:"all .3s"}}
@@ -1190,7 +1237,7 @@ function FAQSection(){
         </div>
       </div>
       <div style={{maxWidth:1100,margin:"0 auto",padding:"0 5%"}}>
-        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
+        <div className="faq-grid" style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:16}}>
           {faqs.map((f,i)=>(
             <div key={i} className="reveal" onClick={()=>setOpen(open===i?null:i)}
               style={{background:open===i?C.cafe:C.cream,borderRadius:20,padding:"22px 24px",cursor:"pointer",
@@ -1290,7 +1337,7 @@ function Footer(){
   return(
     <footer style={{background:C.ink,padding:"48px 5% 28px"}}>
       <div style={{maxWidth:1240,margin:"0 auto"}}>
-        <div style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr",gap:40,marginBottom:40,paddingBottom:32,borderBottom:"1px solid rgba(255,255,255,.08)"}}>
+        <div className="footer-grid" style={{display:"grid",gridTemplateColumns:"2fr 1fr 1fr",gap:40,marginBottom:40,paddingBottom:32,borderBottom:"1px solid rgba(255,255,255,.08)"}}>
           <div>
             <div style={{display:"flex",alignItems:"center",gap:10,marginBottom:14}}>
               <LogoSVG size={32} color={C.cafeXlt}/>
@@ -1507,95 +1554,6 @@ export default function LandingPage({onLogin}){
   const demoTimers=useRef([]);
   useReveal();
 
-  useEffect(()=>{
-    if(!splashDone)return;
-    let audioCtx=null;
-    let lastAt=0;
-    let lastFxAt=0;
-    let audioUnlocked=false;
-
-    const ensureCtx=()=>{
-      if(audioCtx)return audioCtx;
-      const Ctx=window.AudioContext||window.webkitAudioContext;
-      if(!Ctx)return null;
-      audioCtx=new Ctx();
-      return audioCtx;
-    };
-    const unlockAudio=()=>{
-      const ctx=ensureCtx();
-      if(!ctx)return null;
-      if(ctx.state==="suspended")ctx.resume().catch(()=>{});
-      audioUnlocked=true;
-      return ctx;
-    };
-    const tone=(ctx,{from,to,at,dur=.1,type="triangle",vol=.06})=>{
-      const o=ctx.createOscillator();
-      const g=ctx.createGain();
-      o.type=type;
-      o.frequency.setValueAtTime(from,at);
-      o.frequency.exponentialRampToValueAtTime(Math.max(60,to),at+dur);
-      g.gain.setValueAtTime(0.0001,at);
-      g.gain.exponentialRampToValueAtTime(vol,at+.01);
-      g.gain.exponentialRampToValueAtTime(0.0001,at+dur);
-      o.connect(g);g.connect(ctx.destination);
-      o.start(at);o.stop(at+dur+.02);
-    };
-    const playPet=(kind)=>{
-      const now=Date.now();
-      if(now-lastAt<140)return;
-      lastAt=now;
-      const ctx=ensureCtx();
-      if(!ctx)return;
-      const t=ctx.currentTime+.01;
-      if(kind==="guaf"){
-        tone(ctx,{from:250,to:170,at:t,dur:.1,type:"square",vol:.068});
-        tone(ctx,{from:230,to:145,at:t+.11,dur:.085,type:"square",vol:.052});
-      }else{
-        tone(ctx,{from:820,to:530,at:t,dur:.16,type:"sine",vol:.062});
-        tone(ctx,{from:540,to:440,at:t+.15,dur:.13,type:"sine",vol:.05});
-      }
-    };
-    const bubble=(x,y,text)=>{
-      const el=document.createElement("span");
-      el.className="pet-bubble";
-      el.textContent=text;
-      el.style.left=`${x}px`;
-      el.style.top=`${y}px`;
-      document.body.appendChild(el);
-      setTimeout(()=>el.remove(),900);
-    };
-    const fx=(btn,withSound=false)=>{
-      const now=Date.now();
-      if(now-lastFxAt<120)return;
-      lastFxAt=now;
-      const isDog=Math.random()>.5;
-      const msg=isDog?"Guaf!":"Miau!";
-      const r=btn.getBoundingClientRect();
-      bubble(r.left+Math.min(28,r.width*.35),r.top+6,msg);
-      if(withSound&&audioUnlocked)playPet(isDog?"guaf":"miau");
-    };
-    const onOver=e=>{
-      const btn=e.target?.closest?.("button");
-      if(!btn)return;
-      if(e.relatedTarget&&btn.contains(e.relatedTarget))return;
-      fx(btn,true);
-    };
-    const onPress=e=>{
-      const btn=e.target?.closest?.("button");
-      if(!btn)return;
-      if(typeof e.button==="number"&&e.button!==0)return;
-      unlockAudio();
-      fx(btn,true);
-    };
-    document.addEventListener("mouseover",onOver);
-    document.addEventListener("pointerdown",onPress,true);
-    return()=>{
-      document.removeEventListener("mouseover",onOver);
-      document.removeEventListener("pointerdown",onPress,true);
-      if(audioCtx&&audioCtx.state!=="closed")audioCtx.close().catch(()=>{});
-    };
-  },[splashDone]);
-
   const notify=(msg,type="info")=>{
     setToast({msg,type});
     setTimeout(()=>setToast(null),2600);
@@ -1672,6 +1630,3 @@ export default function LandingPage({onLogin}){
     </>
   );
 }
-
-
-
