@@ -53,6 +53,22 @@
         font-weight:600;
         color:var(--boot-sub);
       }
+      .boot-actions{
+        display:none;
+        align-items:center;
+        gap:10px;
+      }
+      #boot-splash.boot-stuck .boot-actions{display:flex;}
+      .boot-btn{
+        border:1px solid rgba(22,83,187,.22);
+        background:#fff;
+        color:#1653BB;
+        border-radius:999px;
+        padding:8px 14px;
+        font-size:.82rem;
+        font-weight:700;
+        cursor:pointer;
+      }
       @keyframes bootSpin{to{transform:rotate(360deg)}}
     </style>
   </head>
@@ -61,6 +77,9 @@
       <img src="/brand/logo-primary-trim.png" alt="DoGood" />
       <div class="boot-loader" aria-hidden="true"></div>
       <div class="boot-text">Cargando experiencia DoGood...</div>
+      <div class="boot-actions">
+        <button class="boot-btn" onclick="location.reload()">Recargar</button>
+      </div>
     </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
