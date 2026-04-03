@@ -4,7 +4,7 @@ import Root from "./Root.jsx";
 
 const bootSplash = document.getElementById("boot-splash");
 const bootStart = Date.now();
-const rootEl = document.getElementById("root");
+const bootTextEl = document.querySelector("#boot-splash .boot-text");
 const hideBootSplash = () => {
   if (!bootSplash || bootSplash.dataset.hidden === "1") return;
   const elapsed = Date.now() - bootStart;
@@ -25,17 +25,21 @@ createRoot(document.getElementById("root")).render(
 
 // Hide static preload screen only when app is ready.
 window.addEventListener("dogood:app-ready", hideBootSplash, { once: true });
-
-const rootPoll = window.setInterval(() => {
-  if (rootEl && rootEl.childElementCount > 0) {
-    hideBootSplash();
-    window.clearInterval(rootPoll);
-  }
-}, 250);
-
 window.setTimeout(() => {
-  window.clearInterval(rootPoll);
   if (bootSplash && bootSplash.dataset.hidden !== "1") {
+    if (bootTextEl) bootTextEl.textContent = "La carga está tardando más de lo normal...";
     bootSplash.classList.add("boot-stuck");
   }
 }, 12000);
+
+window.addEventListener("error", () => {
+  if (!bootSplash || bootSplash.dataset.hidden === "1") return;
+  if (bootTextEl) bootTextEl.textContent = "No se pudo iniciar la app. Intenta recargar.";
+  bootSplash.classList.add("boot-stuck");
+});
+
+window.addEventListener("unhandledrejection", () => {
+  if (!bootSplash || bootSplash.dataset.hidden === "1") return;
+  if (bootTextEl) bootTextEl.textContent = "Error de carga de datos. Intenta recargar.";
+  bootSplash.classList.add("boot-stuck");
+});
