@@ -286,6 +286,33 @@ const LogoSVG=({size=40,color="#5C3D1E"})=>{
   );
 };
 
+function BoneShape({w=86,h=22,color=`${C.cafeXlt}22`,style={}}){
+  const r=Math.max(6,Math.round(h*.33));
+  return(
+    <div style={{position:"absolute",width:w,height:h,borderRadius:999,background:color,...style}}>
+      <span style={{position:"absolute",left:-r,top:-r,width:r*2,height:r*2,borderRadius:"50%",background:color}}/>
+      <span style={{position:"absolute",left:-r,bottom:-r,width:r*2,height:r*2,borderRadius:"50%",background:color}}/>
+      <span style={{position:"absolute",right:-r,top:-r,width:r*2,height:r*2,borderRadius:"50%",background:color}}/>
+      <span style={{position:"absolute",right:-r,bottom:-r,width:r*2,height:r*2,borderRadius:"50%",background:color}}/>
+    </div>
+  );
+}
+
+function PawPrint({size=34,color=`${C.cafeXlt}2B`,style={}}){
+  const toe=Math.max(5,Math.round(size*.18));
+  const padW=Math.max(14,Math.round(size*.46));
+  const padH=Math.max(11,Math.round(size*.34));
+  return(
+    <div style={{position:"absolute",width:size,height:size,...style}}>
+      <span style={{position:"absolute",left:size*.08,top:size*.28,width:toe,height:toe,borderRadius:"50%",background:color}}/>
+      <span style={{position:"absolute",left:size*.32,top:size*.12,width:toe,height:toe,borderRadius:"50%",background:color}}/>
+      <span style={{position:"absolute",left:size*.56,top:size*.18,width:toe,height:toe,borderRadius:"50%",background:color}}/>
+      <span style={{position:"absolute",left:size*.74,top:size*.36,width:toe,height:toe,borderRadius:"50%",background:color}}/>
+      <span style={{position:"absolute",left:size*.26,top:size*.52,width:padW,height:padH,borderRadius:"60% 60% 48% 48% / 65% 65% 35% 35%",background:color}}/>
+    </div>
+  );
+}
+
 function Splash({onDone}){
   const [out,setOut]=useState(false);
   useEffect(()=>{
