@@ -86,12 +86,12 @@ const PAW_CURSOR = `data:image/svg+xml,${encodeURIComponent(
 const sectionTexture = (base)=>({
   backgroundColor:base,
   backgroundImage:`
-    linear-gradient(180deg, rgba(255,255,255,.68) 0%, rgba(17,17,17,.03) 100%),
-    radial-gradient(circle at 1px 1px, rgba(138,130,130,.1) 1px, transparent 1.6px),
-    radial-gradient(circle at 84% 14%, ${C.cafeLt}16 0, transparent 36%),
-    radial-gradient(circle at 12% 84%, ${C.beigedk}2F 0, transparent 34%)
+    linear-gradient(180deg, rgba(255,255,255,.82) 0%, rgba(232,240,255,.92) 100%),
+    radial-gradient(circle at 1px 1px, rgba(22,83,187,.08) 1px, transparent 1.8px),
+    radial-gradient(circle at 84% 14%, rgba(22,83,187,.12) 0, transparent 36%),
+    radial-gradient(circle at 12% 84%, rgba(240,194,29,.16) 0, transparent 34%)
   `,
-  backgroundSize:"100% 100%, 32px 32px, 680px 680px, 620px 620px",
+  backgroundSize:"100% 100%, 30px 30px, 700px 700px, 620px 620px",
   backgroundRepeat:"no-repeat, repeat, no-repeat, no-repeat",
   backgroundPosition:"center top, 0 0, 84% 12%, 13% 86%",
 });
@@ -114,22 +114,29 @@ const G = `
   *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{
-    font-family:'Nunito','Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif;
+    font-family:'Segoe UI','Helvetica Neue',Arial,'Nunito','Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif;
     background:
-      linear-gradient(180deg, rgba(255,255,255,.92) 0%, rgba(243,239,239,.98) 100%),
-      radial-gradient(circle at 1px 1px, rgba(140,133,133,.085) 1px, transparent 1.7px),
-      radial-gradient(circle at 86% 18%, rgba(22,83,187,.07) 0, transparent 34%),
-      radial-gradient(circle at 11% 82%, rgba(240,194,29,.08) 0, transparent 32%),
-      #F7F4F4;
-    background-size:100% 100%, 34px 34px, 720px 720px, 660px 660px, auto;
+      linear-gradient(180deg, rgba(250,252,255,.96) 0%, rgba(236,244,255,.98) 100%),
+      radial-gradient(circle at 1px 1px, rgba(22,83,187,.08) 1px, transparent 1.7px),
+      radial-gradient(circle at 86% 18%, rgba(22,83,187,.14) 0, transparent 34%),
+      radial-gradient(circle at 11% 82%, rgba(240,194,29,.12) 0, transparent 32%),
+      #EEF4FF;
+    background-size:100% 100%, 30px 30px, 720px 720px, 660px 660px, auto;
     background-repeat:no-repeat, repeat, no-repeat, no-repeat, repeat;
     background-position:center top, 0 0, 100% 0, 0 100%, 0 0;
     background-attachment:fixed, scroll, fixed, fixed, scroll;
     color:#2C1A0E;
     overflow-x:hidden;
+    -webkit-text-size-adjust:100%;
+    text-size-adjust:100%;
     cursor:url("${PAW_CURSOR}") 4 2, auto;
   }
-  button,input,select,textarea{font-family:'Nunito','Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif;}
+  button,input,select,textarea{
+    font-family:'Segoe UI','Helvetica Neue',Arial,'Nunito','Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif;
+    letter-spacing:normal;
+    word-spacing:normal;
+  }
+  p,a,span,h1,h2,h3,h4,button{word-spacing:normal;letter-spacing:normal}
   button,a,[role="button"]{
     cursor:url("${PAW_CURSOR}") 4 2, pointer;
     transition:transform .22s ease,box-shadow .22s ease,filter .22s ease,background-color .22s ease,border-color .22s ease,color .22s ease;
@@ -216,16 +223,16 @@ const G = `
   }
   @media (max-width: 780px){
     .nav-top-inner{height:auto !important;padding-top:6px !important;padding-bottom:6px !important}
-    .nav-top-inner>div{font-size:.68rem !important}
+    .nav-top-inner>div{font-size:.68rem !important;word-spacing:0 !important;letter-spacing:0 !important;white-space:nowrap}
     .hero-section{padding-top:132px !important}
     .hero-copy h1{font-size:clamp(2rem,10vw,3rem) !important;line-height:1.05 !important}
-    .hero-copy p{font-size:.98rem !important;max-width:100% !important}
+    .hero-copy p{font-size:.98rem !important;max-width:100% !important;line-height:1.6 !important;text-align:left !important}
     .hero-kpis{display:grid !important;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px !important}
     .hero-kpis>div{padding-right:0 !important;margin-right:0 !important;border-right:none !important;background:rgba(255,253,249,.75);border:1px solid #E8DFD0;border-radius:14px;padding:10px 8px !important}
     .hero-art{height:340px !important}
     .hero-pin{display:none !important}
     .nav-actions .nav-demo-btn{display:none !important}
-    .nav-login{padding:8px 14px !important;font-size:.8rem !important}
+    .nav-login{padding:8px 14px !important;font-size:.8rem !important;white-space:nowrap}
     .steps-grid,.services-grid,.help-grid{grid-template-columns:1fr !important}
     .products-head{gap:10px !important}
     .products-tabs{width:100%;justify-content:flex-start}
@@ -233,17 +240,37 @@ const G = `
     .footer-grid{grid-template-columns:1fr !important;gap:22px !important}
   }
   @media (max-width: 560px){
+    .nav-main-inner{padding-left:4% !important;padding-right:4% !important}
+    .nav-main-head{gap:8px !important}
     .nav-links a:nth-of-type(n+4){display:none}
-    .nav-links{overflow-x:auto;padding-bottom:2px !important}
-    .brand-text{width:132px !important;height:46px !important}
-    .nav-login{padding:8px 12px !important}
+    .nav-links{
+      width:100% !important;
+      overflow:visible !important;
+      padding-bottom:2px !important;
+      display:grid !important;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:4px !important;
+    }
+    .nav-links a{
+      font-size:.82rem !important;
+      padding:8px 6px !important;
+      text-align:center !important;
+      white-space:nowrap;
+    }
+    .brand-text{width:118px !important;height:40px !important;max-width:44vw}
+    .nav-login{padding:8px 11px !important;font-size:.78rem !important;min-width:84px}
     .hero-art{display:none !important}
     .hero-section{min-height:auto !important;padding-bottom:34px !important}
+    .hero-copy h1{font-size:clamp(2.1rem,11vw,3rem) !important}
+    .hero-copy p{max-width:96% !important;line-height:1.56 !important}
+    .hero-kpis{grid-template-columns:repeat(2,minmax(0,1fr)) !important;gap:10px !important}
+    .hero-kpis>div:last-child{grid-column:1 / -1}
+    .hero-actions{display:grid !important;grid-template-columns:1fr;gap:10px !important}
     .video-card{min-height:260px !important}
     .match-grid{gap:12px !important}
     .match-card,.match-result{padding:14px !important;border-radius:18px !important}
     .process-section,.services-section,.help-section,.products-section{padding-top:66px !important;padding-bottom:66px !important}
-    .a11y-dock{right:12px !important;bottom:92px !important}
+    .a11y-dock{display:none !important}
     .landing-toast{right:12px !important;left:12px !important;bottom:84px !important}
   }
   ::-webkit-scrollbar{width:5px}
@@ -465,7 +492,7 @@ function Hero({onLoginClick,onDemoClick}){
           <p style={{fontSize:"1.05rem",color:C.sub,lineHeight:1.8,marginBottom:30,maxWidth:440,animation:"fadeUp .7s .2s ease both",opacity:0}}>
             Conectamos animales rescatados con familias que los esperan. Adopta de forma responsable y dale un hogar a quien mas lo necesita.
           </p>
-          <div style={{display:"flex",gap:14,flexWrap:"wrap",animation:"fadeUp .7s .3s ease both",opacity:0}}>
+          <div className="hero-actions" style={{display:"flex",gap:14,flexWrap:"wrap",animation:"fadeUp .7s .3s ease both",opacity:0}}>
             <button onClick={onLoginClick} className="paw-btn" style={{padding:"14px 36px",border:"none",borderRadius:50,background:C.cafe,color:C.white,fontWeight:800,fontSize:"1rem",cursor:"pointer",boxShadow:`0 8px 28px ${C.shadowMd}`,transition:"all .25s"}}
               onMouseEnter={e=>e.currentTarget.style.transform="translateY(-3px)"}
               onMouseLeave={e=>e.currentTarget.style.transform="none"}>

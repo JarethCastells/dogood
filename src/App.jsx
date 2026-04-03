@@ -13,7 +13,7 @@ async function apiFetch(endpoint, action, method = "GET", body = null) {
    TOKENS
 ======================================== */
 const T = {
-  bg:       "#F3EFEF",
+  bg:       "#FFF8DF",
   surface:  "#FFFFFF",
   border:   "#DDD5D6",
   borderHov:"#BEB6B7",
@@ -117,9 +117,9 @@ const G = `
     font-family: 'Plus Jakarta Sans', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
     background-color: ${T.bg};
     background-image:
-      linear-gradient(180deg, rgba(255,255,255,.35) 0%, rgba(232,228,220,.55) 100%),
-      radial-gradient(circle at 15% 18%, rgba(255,255,255,.62) 0%, rgba(255,255,255,0) 42%),
-      radial-gradient(circle at 84% 78%, rgba(20,20,20,.07) 0%, rgba(20,20,20,0) 40%),
+      linear-gradient(180deg, rgba(255,252,236,.96) 0%, rgba(255,244,199,.95) 100%),
+      radial-gradient(circle at 15% 18%, rgba(255,255,255,.65) 0%, rgba(255,255,255,0) 42%),
+      radial-gradient(circle at 84% 78%, rgba(240,194,29,.16) 0%, rgba(240,194,29,0) 40%),
       url("${DOODLE_BG}");
     background-size: 100% 100%, 100% 100%, 100% 100%, 220px 220px;
     background-attachment: fixed, fixed, fixed, fixed;
@@ -1040,8 +1040,8 @@ export default function DoGood({initialUser=null,onLogout}){
 
       {/* -- MAIN CONTENT -- */}
       <main style={{flex:1,minWidth:0,padding:isMobile?"18px 14px 24px":isTablet?"24px 22px 28px":"32px 36px",overflowY:"auto",
-        backgroundImage:`radial-gradient(circle at -10% 18%, rgba(122,82,48,.13) 0%, rgba(122,82,48,0) 34%),
-        radial-gradient(circle at 108% 74%, rgba(20,20,20,.09) 0%, rgba(20,20,20,0) 38%),
+        backgroundImage:`radial-gradient(circle at -10% 18%, rgba(240,194,29,.24) 0%, rgba(240,194,29,0) 34%),
+        radial-gradient(circle at 108% 74%, rgba(22,83,187,.12) 0%, rgba(22,83,187,0) 38%),
         url("${DOODLE_BG}")`,
         backgroundSize:"900px 700px, 800px 700px, 260px 260px",
         backgroundPosition:"0 0, 100% 100%, 0 0",
