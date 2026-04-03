@@ -86,13 +86,14 @@ const PAW_CURSOR = `data:image/svg+xml,${encodeURIComponent(
 const sectionTexture = (base)=>({
   backgroundColor:base,
   backgroundImage:`
-    linear-gradient(180deg, rgba(255,255,255,.08) 0%, rgba(23,21,19,.02) 100%),
-    radial-gradient(circle at 86% 14%, ${C.cafeLt}22 0, transparent 38%),
-    radial-gradient(circle at 13% 84%, ${C.beigedk}42 0, transparent 36%)
+    linear-gradient(180deg, rgba(255,255,255,.68) 0%, rgba(17,17,17,.03) 100%),
+    radial-gradient(circle at 1px 1px, rgba(138,130,130,.1) 1px, transparent 1.6px),
+    radial-gradient(circle at 84% 14%, ${C.cafeLt}16 0, transparent 36%),
+    radial-gradient(circle at 12% 84%, ${C.beigedk}2F 0, transparent 34%)
   `,
-  backgroundSize:"100% 100%, 720px 720px, 640px 640px",
-  backgroundRepeat:"no-repeat, no-repeat, no-repeat",
-  backgroundPosition:"center top, 84% 12%, 13% 86%",
+  backgroundSize:"100% 100%, 32px 32px, 680px 680px, 620px 620px",
+  backgroundRepeat:"no-repeat, repeat, no-repeat, no-repeat",
+  backgroundPosition:"center top, 0 0, 84% 12%, 13% 86%",
 });
 
 const G = `
@@ -115,17 +116,15 @@ const G = `
   body{
     font-family:'Nunito','Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif;
     background:
-      linear-gradient(180deg, rgba(255,255,255,.42) 0%, rgba(26,80,184,.08) 100%),
-      radial-gradient(circle at 9% 16%, rgba(225,218,219,.9) 0, transparent 40%),
-      radial-gradient(circle at 90% 82%, rgba(22,83,187,.12) 0, transparent 40%),
-      radial-gradient(circle at 45% 45%, rgba(240,194,29,.14) 0, transparent 50%),
-      url("${BRAND.handBlue}"),
-      url("${BRAND.handBlue}"),
-      #F5F0F1;
-    background-size:100% 100%, 780px 780px, 820px 820px, 980px 980px, 520px 290px, 680px 380px, auto;
-    background-repeat:no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat, repeat;
-    background-position:center top, 0 0, 100% 100%, center center, 0 0, 260px 170px, 0 0;
-    background-attachment:fixed, fixed, fixed, fixed, scroll, scroll, scroll;
+      linear-gradient(180deg, rgba(255,255,255,.92) 0%, rgba(243,239,239,.98) 100%),
+      radial-gradient(circle at 1px 1px, rgba(140,133,133,.085) 1px, transparent 1.7px),
+      radial-gradient(circle at 86% 18%, rgba(22,83,187,.07) 0, transparent 34%),
+      radial-gradient(circle at 11% 82%, rgba(240,194,29,.08) 0, transparent 32%),
+      #F7F4F4;
+    background-size:100% 100%, 34px 34px, 720px 720px, 660px 660px, auto;
+    background-repeat:no-repeat, repeat, no-repeat, no-repeat, repeat;
+    background-position:center top, 0 0, 100% 0, 0 100%, 0 0;
+    background-attachment:fixed, scroll, fixed, fixed, scroll;
     color:#2C1A0E;
     overflow-x:hidden;
     cursor:url("${PAW_CURSOR}") 4 2, auto;
@@ -287,67 +286,6 @@ const LogoSVG=({size=40,color="#5C3D1E"})=>{
   );
 };
 
-function BoneShape({w=86,h=22,color=`${C.cafeXlt}26`,style={}}){
-  const r=Math.max(6,Math.round(h*.33));
-  return(
-    <div style={{position:"absolute",width:w,height:h,borderRadius:999,background:color,...style}}>
-      <span style={{position:"absolute",left:-r,top:-r,width:r*2,height:r*2,borderRadius:"50%",background:color}}/>
-      <span style={{position:"absolute",left:-r,bottom:-r,width:r*2,height:r*2,borderRadius:"50%",background:color}}/>
-      <span style={{position:"absolute",right:-r,top:-r,width:r*2,height:r*2,borderRadius:"50%",background:color}}/>
-      <span style={{position:"absolute",right:-r,bottom:-r,width:r*2,height:r*2,borderRadius:"50%",background:color}}/>
-    </div>
-  );
-}
-
-function PawPrint({size=34,color=`${C.cafeXlt}33`,style={}}){
-  const toe=Math.max(5,Math.round(size*.18));
-  const padW=Math.max(14,Math.round(size*.46));
-  const padH=Math.max(11,Math.round(size*.34));
-  return(
-    <div style={{position:"absolute",width:size,height:size,...style}}>
-      <span style={{position:"absolute",left:size*.08,top:size*.28,width:toe,height:toe,borderRadius:"50%",background:color}}/>
-      <span style={{position:"absolute",left:size*.32,top:size*.12,width:toe,height:toe,borderRadius:"50%",background:color}}/>
-      <span style={{position:"absolute",left:size*.56,top:size*.18,width:toe,height:toe,borderRadius:"50%",background:color}}/>
-      <span style={{position:"absolute",left:size*.74,top:size*.36,width:toe,height:toe,borderRadius:"50%",background:color}}/>
-      <span style={{position:"absolute",left:size*.26,top:size*.52,width:padW,height:padH,borderRadius:"60% 60% 48% 48% / 65% 65% 35% 35%",background:color}}/>
-    </div>
-  );
-}
-
-function AmbientBackdrop(){
-  return(
-    <div style={{position:"absolute",inset:0,pointerEvents:"none",zIndex:0,overflow:"hidden"}}>
-      <div style={{position:"absolute",inset:0,opacity:.11,backgroundImage:`radial-gradient(circle, ${C.beigedk} 1px, transparent 1px)`,backgroundSize:"42px 42px"}}/>
-      <div style={{position:"absolute",top:"7%",left:"5%",width:160,height:160,borderRadius:"50%",background:`${C.beigedk}72`,animation:"driftGlow 13s ease-in-out infinite"}}/>
-      <div style={{position:"absolute",top:"22%",right:"8%",width:220,height:220,borderRadius:"50%",background:`${C.cafeXlt}42`,animation:"driftGlow 16s ease-in-out infinite",animationDelay:".7s"}}/>
-      <div style={{position:"absolute",top:"47%",left:"7%",width:140,height:140,borderRadius:"50%",background:`${C.beigedk}66`,animation:"driftGlow 14s ease-in-out infinite",animationDelay:".3s"}}/>
-      <div style={{position:"absolute",top:"64%",right:"12%",width:170,height:170,borderRadius:"50%",background:`${C.cafeXlt}33`,animation:"driftGlow 15s ease-in-out infinite",animationDelay:".9s"}}/>
-      <div style={{position:"absolute",bottom:"8%",left:"18%",width:130,height:130,borderRadius:"50%",background:`${C.beigedk}5f`,animation:"driftGlow 12s ease-in-out infinite",animationDelay:".4s"}}/>
-      <div style={{position:"absolute",bottom:"26%",right:"32%",width:105,height:105,borderRadius:"50%",background:`${C.cafeXlt}2B`,animation:"driftGlow 11s ease-in-out infinite",animationDelay:".2s"}}/>
-      <div style={{position:"absolute",top:"30%",left:"43%",width:76,height:76,borderRadius:"50%",background:`${C.grayLt}40`,animation:"driftGlow 10.5s ease-in-out infinite",animationDelay:".5s"}}/>
-      <div style={{position:"absolute",top:"76%",left:"62%",width:94,height:94,borderRadius:"50%",background:`${C.beigedk}4A`,animation:"driftGlow 11.2s ease-in-out infinite",animationDelay:".6s"}}/>
-      <div style={{position:"absolute",top:"12%",right:"42%",width:58,height:58,borderRadius:"50%",background:`${C.cafeXlt}2A`,animation:"driftGlow 9.8s ease-in-out infinite",animationDelay:".25s"}}/>
-
-      <BoneShape color={`${C.cafeXlt}22`} style={{top:"14%",right:"30%",transform:"rotate(-18deg)"}}/>
-      <BoneShape color={`${C.cafeXlt}20`} w={74} h={20} style={{top:"34%",left:"9%",transform:"rotate(20deg)"}}/>
-      <BoneShape color={`${C.cafeXlt}21`} w={96} h={24} style={{top:"52%",right:"18%",transform:"rotate(-12deg)"}}/>
-      <BoneShape color={`${C.cafeXlt}1F`} w={78} h={20} style={{top:"74%",left:"12%",transform:"rotate(-10deg)"}}/>
-      <BoneShape color={`${C.cafeXlt}23`} w={90} h={22} style={{bottom:"9%",right:"24%",transform:"rotate(18deg)"}}/>
-      <BoneShape color={`${C.cafeXlt}20`} w={76} h={19} style={{top:"86%",left:"34%",transform:"rotate(8deg)"}}/>
-      <BoneShape color={`${C.cafeXlt}1D`} w={66} h={18} style={{top:"26%",right:"45%",transform:"rotate(-26deg)"}}/>
-      <BoneShape color={`${C.grayLt}2A`} w={70} h={18} style={{top:"41%",left:"42%",transform:"rotate(11deg)"}}/>
-      <BoneShape color={`${C.grayLt}26`} w={62} h={17} style={{bottom:"22%",left:"57%",transform:"rotate(-16deg)"}}/>
-
-      <PawPrint color={`${C.cafeXlt}2F`} size={40} style={{top:"18%",left:"22%",transform:"rotate(-14deg)"}}/>
-      <PawPrint color={`${C.cafeXlt}2B`} size={36} style={{top:"41%",right:"9%",transform:"rotate(12deg)"}}/>
-      <PawPrint color={`${C.cafeXlt}2A`} size={32} style={{top:"58%",left:"20%",transform:"rotate(-8deg)"}}/>
-      <PawPrint color={`${C.cafeXlt}2F`} size={38} style={{top:"80%",right:"14%",transform:"rotate(16deg)"}}/>
-      <PawPrint color={`${C.grayLt}30`} size={30} style={{top:"28%",left:"56%",transform:"rotate(8deg)"}}/>
-      <PawPrint color={`${C.grayLt}2B`} size={34} style={{bottom:"15%",left:"40%",transform:"rotate(-12deg)"}}/>
-    </div>
-  );
-}
-
 function Splash({onDone}){
   const [out,setOut]=useState(false);
   useEffect(()=>{
@@ -487,7 +425,7 @@ function Hero({onLoginClick,onDemoClick}){
   ];
   return(
     <section className="hero-section" style={{...sectionTexture(C.beigelt),minHeight:"100vh",display:"flex",alignItems:"center",padding:"122px 5% 40px",overflow:"hidden",position:"relative"}}>
-      <div style={{position:"absolute",inset:0,backgroundImage:`radial-gradient(circle, ${C.beigedk} 1px, transparent 1px)`,backgroundSize:"32px 32px",opacity:.35,pointerEvents:"none"}}/>
+      <div style={{position:"absolute",inset:0,backgroundImage:`radial-gradient(circle, ${C.beigedk} 1px, transparent 1px)`,backgroundSize:"38px 38px",opacity:.16,pointerEvents:"none"}}/>
       <div className="hero-grid" style={{maxWidth:1240,margin:"0 auto",width:"100%",display:"grid",gridTemplateColumns:"1fr 1fr",gap:40,alignItems:"center",position:"relative"}}>
         <div className="hero-copy">
           <div style={{display:"inline-flex",alignItems:"center",gap:8,background:C.beigedk,border:`1.5px solid ${C.cafeXlt}`,borderRadius:50,padding:"6px 18px",marginBottom:22,animation:"fadeUp .6s ease both"}}>
@@ -1665,7 +1603,6 @@ export default function LandingPage({onLogin}){
       {!splashDone&&<Splash onDone={()=>setSplashDone(true)}/>}
       {splashDone&&(
         <div className={`landing-shell${highContrast?" hc":""}${reduceMotion?" rm":""}`} style={{position:"relative"}}>
-          <AmbientBackdrop/>
           <div style={{position:"relative",zIndex:1}}>
             <Navbar onLoginClick={()=>setShowLogin(true)} onDemoClick={runGuidedDemo}/>
             <Hero onLoginClick={()=>setShowLogin(true)} onDemoClick={runGuidedDemo}/>
