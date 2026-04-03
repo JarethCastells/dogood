@@ -56,19 +56,19 @@ const E = {
 };
 
 const DOG_DOODLE = `data:image/svg+xml,${encodeURIComponent(
-  `<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240' fill='none' stroke='#1F1B18' stroke-width='1.1' stroke-linecap='round' stroke-linejoin='round'>
-    <g opacity='.12'>
+  `<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240' viewBox='0 0 240 240' fill='none' stroke='#1D5FC8' stroke-width='1.1' stroke-linecap='round' stroke-linejoin='round'>
+    <g opacity='.34'>
       <circle cx='24' cy='26' r='6'/><circle cx='16' cy='37' r='4'/><circle cx='29' cy='39' r='4'/><circle cx='37' cy='29' r='4'/><path d='M16 48c6-7 18-7 24 0'/>
       <path d='M70 24h20c4 0 6 2 6 6s-2 6-6 6H70c-4 0-6-2-6-6s2-6 6-6Z'/><circle cx='62' cy='27' r='4'/><circle cx='62' cy='35' r='4'/><circle cx='98' cy='27' r='4'/><circle cx='98' cy='35' r='4'/>
-      <path d='M146 30l6-7 6 7'/><path d='M158 30l6-7 6 7'/><circle cx='159' cy='42' r='11'/><circle cx='155' cy='40' r='1.2' fill='#1F1B18'/><circle cx='163' cy='40' r='1.2' fill='#1F1B18'/><path d='M157 45h4'/>
-      <circle cx='32' cy='118' r='10'/><circle cx='28' cy='115' r='1.2' fill='#1F1B18'/><circle cx='36' cy='115' r='1.2' fill='#1F1B18'/><path d='M29 121h6'/><path d='M22 109l4-4'/><path d='M42 109l-4-4'/>
+      <path d='M146 30l6-7 6 7'/><path d='M158 30l6-7 6 7'/><circle cx='159' cy='42' r='11'/><circle cx='155' cy='40' r='1.2' fill='#1D5FC8'/><circle cx='163' cy='40' r='1.2' fill='#1D5FC8'/><path d='M157 45h4'/>
+      <circle cx='32' cy='118' r='10'/><circle cx='28' cy='115' r='1.2' fill='#1D5FC8'/><circle cx='36' cy='115' r='1.2' fill='#1D5FC8'/><path d='M29 121h6'/><path d='M22 109l4-4'/><path d='M42 109l-4-4'/>
       <path d='M84 112h24c4 0 6 2 6 6s-2 6-6 6H84c-4 0-6-2-6-6s2-6 6-6Z'/><circle cx='76' cy='114' r='4'/><circle cx='76' cy='122' r='4'/><circle cx='116' cy='114' r='4'/><circle cx='116' cy='122' r='4'/>
       <circle cx='170' cy='112' r='5'/><circle cx='162' cy='124' r='3.5'/><circle cx='174' cy='126' r='3.5'/><circle cx='181' cy='118' r='3.5'/><path d='M162 136c4-5 12-5 16 0'/>
       <path d='M118 186h18c3 0 5 2 5 4s-2 4-5 4h-18c-3 0-5-2-5-4s2-4 5-4Z'/><circle cx='112' cy='188' r='3'/><circle cx='112' cy='194' r='3'/><circle cx='144' cy='188' r='3'/><circle cx='144' cy='194' r='3'/>
       <circle cx='46' cy='182' r='2'/><circle cx='58' cy='176' r='1.8'/><circle cx='72' cy='184' r='2.2'/><circle cx='132' cy='176' r='2'/><circle cx='158' cy='182' r='1.8'/>
       <circle cx='205' cy='74' r='2.2'/><circle cx='214' cy='68' r='1.5'/><circle cx='224' cy='77' r='2'/>
       <path d='M198 152h20c3 0 5 2 5 4s-2 4-5 4h-20c-3 0-5-2-5-4s2-4 5-4Z'/><circle cx='192' cy='154' r='3'/><circle cx='192' cy='160' r='3'/><circle cx='224' cy='154' r='3'/><circle cx='224' cy='160' r='3'/>
-      <circle cx='198' cy='198' r='8'/><circle cx='194' cy='195' r='1.2' fill='#1F1B18'/><circle cx='202' cy='195' r='1.2' fill='#1F1B18'/><path d='M195 201h6'/>
+      <circle cx='198' cy='198' r='8'/><circle cx='194' cy='195' r='1.2' fill='#1D5FC8'/><circle cx='202' cy='195' r='1.2' fill='#1D5FC8'/><path d='M195 201h6'/>
     </g>
   </svg>`
 )}`;
@@ -86,12 +86,12 @@ const PAW_CURSOR = `data:image/svg+xml,${encodeURIComponent(
 const sectionTexture = (base)=>({
   backgroundColor:base,
   backgroundImage:`
-    linear-gradient(180deg, rgba(255,255,255,.82) 0%, rgba(232,240,255,.92) 100%),
-    radial-gradient(circle at 1px 1px, rgba(22,83,187,.08) 1px, transparent 1.8px),
-    radial-gradient(circle at 84% 14%, rgba(22,83,187,.12) 0, transparent 36%),
-    radial-gradient(circle at 12% 84%, rgba(240,194,29,.16) 0, transparent 34%)
+    linear-gradient(180deg, rgba(248,252,255,.9) 0%, rgba(238,246,255,.95) 100%),
+    url("${DOG_DOODLE}"),
+    radial-gradient(circle at 84% 14%, rgba(29,95,200,.14) 0, transparent 36%),
+    radial-gradient(circle at 12% 84%, rgba(240,194,29,.12) 0, transparent 34%)
   `,
-  backgroundSize:"100% 100%, 30px 30px, 700px 700px, 620px 620px",
+  backgroundSize:"100% 100%, 236px 236px, 700px 700px, 620px 620px",
   backgroundRepeat:"no-repeat, repeat, no-repeat, no-repeat",
   backgroundPosition:"center top, 0 0, 84% 12%, 13% 86%",
 });
@@ -116,12 +116,12 @@ const G = `
   body{
     font-family:'Segoe UI','Helvetica Neue',Arial,'Nunito','Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif;
     background:
-      linear-gradient(180deg, rgba(250,252,255,.96) 0%, rgba(236,244,255,.98) 100%),
-      radial-gradient(circle at 1px 1px, rgba(22,83,187,.08) 1px, transparent 1.7px),
-      radial-gradient(circle at 86% 18%, rgba(22,83,187,.14) 0, transparent 34%),
-      radial-gradient(circle at 11% 82%, rgba(240,194,29,.12) 0, transparent 32%),
-      #EEF4FF;
-    background-size:100% 100%, 30px 30px, 720px 720px, 660px 660px, auto;
+      linear-gradient(180deg, rgba(250,252,255,.98) 0%, rgba(238,246,255,.99) 100%),
+      url("${DOG_DOODLE}"),
+      radial-gradient(circle at 86% 18%, rgba(29,95,200,.16) 0, transparent 34%),
+      radial-gradient(circle at 11% 82%, rgba(240,194,29,.11) 0, transparent 32%),
+      #EFF5FF;
+    background-size:100% 100%, 236px 236px, 720px 720px, 660px 660px, auto;
     background-repeat:no-repeat, repeat, no-repeat, no-repeat, repeat;
     background-position:center top, 0 0, 100% 0, 0 100%, 0 0;
     background-attachment:fixed, scroll, fixed, fixed, scroll;

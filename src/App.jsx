@@ -70,18 +70,18 @@ const IC = {
 };
 
 const DOODLE_BG = `data:image/svg+xml,${encodeURIComponent(
-  `<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220' fill='none' stroke='#2A2A2A' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'>
-    <g opacity='.24'>
+  `<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220' viewBox='0 0 220 220' fill='none' stroke='#E0B539' stroke-width='1.2' stroke-linecap='round' stroke-linejoin='round'>
+    <g opacity='.38'>
       <circle cx='24' cy='24' r='6'/><circle cx='16' cy='36' r='4'/><circle cx='28' cy='38' r='4'/><circle cx='36' cy='28' r='4'/><path d='M16 48c6-7 18-7 24 0'/>
       <path d='M66 24h20c4 0 6 2 6 6s-2 6-6 6H66c-4 0-6-2-6-6s2-6 6-6Z'/><circle cx='58' cy='26' r='4'/><circle cx='58' cy='34' r='4'/><circle cx='94' cy='26' r='4'/><circle cx='94' cy='34' r='4'/>
-      <path d='M140 28l6-7 6 7'/><path d='M152 28l6-7 6 7'/><circle cx='153' cy='39' r='11'/><circle cx='149' cy='37' r='1.3' fill='#2A2A2A'/><circle cx='157' cy='37' r='1.3' fill='#2A2A2A'/><path d='M151 42h4'/>
-      <circle cx='30' cy='120' r='10'/><circle cx='26' cy='118' r='1.2' fill='#2A2A2A'/><circle cx='34' cy='118' r='1.2' fill='#2A2A2A'/><path d='M27 123h6'/><path d='M20 110l4-4'/><path d='M40 110l-4-4'/>
+      <path d='M140 28l6-7 6 7'/><path d='M152 28l6-7 6 7'/><circle cx='153' cy='39' r='11'/><circle cx='149' cy='37' r='1.3' fill='#E0B539'/><circle cx='157' cy='37' r='1.3' fill='#E0B539'/><path d='M151 42h4'/>
+      <circle cx='30' cy='120' r='10'/><circle cx='26' cy='118' r='1.2' fill='#E0B539'/><circle cx='34' cy='118' r='1.2' fill='#E0B539'/><path d='M27 123h6'/><path d='M20 110l4-4'/><path d='M40 110l-4-4'/>
       <path d='M78 112h24c4 0 6 2 6 6s-2 6-6 6H78c-4 0-6-2-6-6s2-6 6-6Z'/><circle cx='70' cy='114' r='4'/><circle cx='70' cy='122' r='4'/><circle cx='110' cy='114' r='4'/><circle cx='110' cy='122' r='4'/>
       <circle cx='164' cy='114' r='5'/><circle cx='156' cy='126' r='3.5'/><circle cx='168' cy='128' r='3.5'/><circle cx='175' cy='120' r='3.5'/><path d='M156 138c4-5 12-5 16 0'/>
       <circle cx='56' cy='174' r='2'/><circle cx='68' cy='168' r='1.8'/><circle cx='82' cy='176' r='2.2'/><circle cx='126' cy='170' r='2'/><circle cx='152' cy='176' r='1.8'/>
       <path d='M118 188h18c3 0 5 2 5 4s-2 4-5 4h-18c-3 0-5-2-5-4s2-4 5-4Z'/>
       <circle cx='112' cy='190' r='3'/><circle cx='112' cy='196' r='3'/><circle cx='144' cy='190' r='3'/><circle cx='144' cy='196' r='3'/>
-      <circle cx='188' cy='64' r='8'/><circle cx='184' cy='61' r='1.3' fill='#2A2A2A'/><circle cx='192' cy='61' r='1.3' fill='#2A2A2A'/><path d='M185 67h6'/><path d='M180 56l3-3'/><path d='M196 56l-3-3'/>
+      <circle cx='188' cy='64' r='8'/><circle cx='184' cy='61' r='1.3' fill='#E0B539'/><circle cx='192' cy='61' r='1.3' fill='#E0B539'/><path d='M185 67h6'/><path d='M180 56l3-3'/><path d='M196 56l-3-3'/>
     </g>
   </svg>`
 )}`;
@@ -117,11 +117,11 @@ const G = `
     font-family: 'Plus Jakarta Sans', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Apple Color Emoji', 'Noto Color Emoji', sans-serif;
     background-color: ${T.bg};
     background-image:
-      linear-gradient(180deg, rgba(255,252,236,.96) 0%, rgba(255,244,199,.95) 100%),
+      linear-gradient(180deg, rgba(255,253,240,.98) 0%, rgba(255,245,201,.98) 100%),
       radial-gradient(circle at 15% 18%, rgba(255,255,255,.65) 0%, rgba(255,255,255,0) 42%),
       radial-gradient(circle at 84% 78%, rgba(240,194,29,.16) 0%, rgba(240,194,29,0) 40%),
       url("${DOODLE_BG}");
-    background-size: 100% 100%, 100% 100%, 100% 100%, 220px 220px;
+    background-size: 100% 100%, 100% 100%, 100% 100%, 236px 236px;
     background-attachment: fixed, fixed, fixed, fixed;
     color: ${T.ink};
     -webkit-font-smoothing: antialiased;
