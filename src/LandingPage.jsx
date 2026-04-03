@@ -4,11 +4,19 @@ const API_BASE = (import.meta.env.VITE_API_URL || "http://localhost/dogood-v4/ap
 const apiUrl = (path) => `${API_BASE}/${path.replace(/^\/+/, "")}`;
 
 const C = {
-  beige:"#F2EDE4", beigedk:"#E8DFD0", beigelt:"#FAF7F2",
-  cafe:"#5C3D1E", cafeMd:"#7A5230", cafeLt:"#A67C52", cafeXlt:"#D4B896",
-  cream:"#FFFDF9", ink:"#2C1A0E", sub:"#6B5040", muted:"#9C8070", faint:"#C4B0A0",
-  gray:"#6A6762", grayLt:"#D4CEC3", graySoft:"#ECE8E1", black:"#171513",
-  white:"#FFFFFF", shadow:"rgba(92,61,30,.12)", shadowMd:"rgba(92,61,30,.22)",
+  beige:"#F3EFEF", beigedk:"#E1DADB", beigelt:"#FCFAFA",
+  cafe:"#1653BB", cafeMd:"#0F45A2", cafeLt:"#F0C21D", cafeXlt:"#F8D868",
+  cream:"#FFFFFF", ink:"#121212", sub:"#3B3B3B", muted:"#6F6B6B", faint:"#B7B1B1",
+  gray:"#6A6762", grayLt:"#D4CECF", graySoft:"#EDE7E8", black:"#111111",
+  white:"#FFFFFF", shadow:"rgba(22,83,187,.12)", shadowMd:"rgba(22,83,187,.22)",
+};
+const BRAND = {
+  logoPrimary:"/brand/logo-primary-trim.png",
+  logoYellow:"/brand/logo-yellow-trim.png",
+  logoBlack:"/brand/logo-black-trim.png",
+  isotypeBlueYellow:"/brand/isotype-blueyellow-trim.png",
+  isotypeYellow:"/brand/isotype-yellow-trim.png",
+  handBlue:"/brand/graphic-hand-blue.jpg",
 };
 
 const E = {
@@ -76,11 +84,11 @@ const PAW_CURSOR = `data:image/svg+xml,${encodeURIComponent(
 )}`;
 
 const sectionTexture = (base)=>({
-  backgroundColor:"transparent",
+  backgroundColor:base,
   backgroundImage:`
     linear-gradient(180deg, rgba(255,255,255,.08) 0%, rgba(23,21,19,.02) 100%),
-    radial-gradient(circle at 86% 14%, ${C.grayLt}28 0, transparent 38%),
-    radial-gradient(circle at 13% 84%, ${C.beigedk}35 0, transparent 36%)
+    radial-gradient(circle at 86% 14%, ${C.cafeLt}22 0, transparent 38%),
+    radial-gradient(circle at 13% 84%, ${C.beigedk}42 0, transparent 36%)
   `,
   backgroundSize:"100% 100%, 720px 720px, 640px 640px",
   backgroundRepeat:"no-repeat, no-repeat, no-repeat",
@@ -88,22 +96,35 @@ const sectionTexture = (base)=>({
 });
 
 const G = `
-  @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800;900&display=swap');
+  @font-face{
+    font-family:'Fredoka';
+    src:url('/brand/AddenRegular.ttf') format('truetype');
+    font-weight:400 900;
+    font-style:normal;
+    font-display:swap;
+  }
+  @font-face{
+    font-family:'Nunito';
+    src:url('/brand/Futura.ttc') format('truetype-collection');
+    font-weight:300 900;
+    font-style:normal;
+    font-display:swap;
+  }
   *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
   html{scroll-behavior:smooth;}
   body{
     font-family:'Nunito','Segoe UI Emoji','Apple Color Emoji','Noto Color Emoji',sans-serif;
     background:
-      linear-gradient(180deg, rgba(255,255,255,.28) 0%, rgba(23,21,19,.05) 100%),
-      radial-gradient(circle at 9% 16%, rgba(212,206,195,.72) 0, transparent 38%),
-      radial-gradient(circle at 90% 82%, rgba(23,21,19,.08) 0, transparent 36%),
-      radial-gradient(circle at 45% 45%, rgba(212,206,195,.35) 0, transparent 48%),
-      url("${DOG_DOODLE}"),
-      url("${DOG_DOODLE}"),
-      #F6F1E8;
-    background-size:100% 100%, 780px 780px, 820px 820px, 980px 980px, 240px 240px, 340px 340px, auto;
+      linear-gradient(180deg, rgba(255,255,255,.42) 0%, rgba(26,80,184,.08) 100%),
+      radial-gradient(circle at 9% 16%, rgba(225,218,219,.9) 0, transparent 40%),
+      radial-gradient(circle at 90% 82%, rgba(22,83,187,.12) 0, transparent 40%),
+      radial-gradient(circle at 45% 45%, rgba(240,194,29,.14) 0, transparent 50%),
+      url("${BRAND.handBlue}"),
+      url("${BRAND.handBlue}"),
+      #F5F0F1;
+    background-size:100% 100%, 780px 780px, 820px 820px, 980px 980px, 520px 290px, 680px 380px, auto;
     background-repeat:no-repeat, no-repeat, no-repeat, no-repeat, repeat, repeat, repeat;
-    background-position:center top, 0 0, 100% 100%, center center, 0 0, 120px 90px, 0 0;
+    background-position:center top, 0 0, 100% 100%, center center, 0 0, 260px 170px, 0 0;
     background-attachment:fixed, fixed, fixed, fixed, scroll, scroll, scroll;
     color:#2C1A0E;
     overflow-x:hidden;
@@ -215,7 +236,7 @@ const G = `
   @media (max-width: 560px){
     .nav-links a:nth-of-type(n+4){display:none}
     .nav-links{overflow-x:auto;padding-bottom:2px !important}
-    .brand-text{font-size:1.35rem !important}
+    .brand-text{width:132px !important;height:46px !important}
     .nav-login{padding:8px 12px !important}
     .hero-art{display:none !important}
     .hero-section{min-height:auto !important;padding-bottom:34px !important}
@@ -227,7 +248,7 @@ const G = `
     .landing-toast{right:12px !important;left:12px !important;bottom:84px !important}
   }
   ::-webkit-scrollbar{width:5px}
-  ::-webkit-scrollbar-thumb{background:#D4B896;border-radius:5px}
+  ::-webkit-scrollbar-thumb{background:#F0C21D;border-radius:5px}
 `;
 
 function useReveal(){
@@ -247,20 +268,24 @@ const floatCardAnim=(i=0)=>({
   animationDelay:`${(i%5)*.14}s`,
 });
 
-const LogoSVG=({size=40,color="#5C3D1E"})=>(
-  <svg width={size} height={size*1.1} viewBox="0 0 80 88" fill="none">
-    <path d="M40 4C24 4 11 17 11 33C11 53 40 84 40 84C40 84 69 53 69 33C69 17 56 4 40 4Z" fill={color} fillOpacity=".18" stroke={color} strokeWidth="3.5"/>
-    <ellipse cx="34" cy="30" rx="11" ry="10" fill={color}/>
-    <circle cx="34" cy="20" r="8" fill={color}/>
-    <ellipse cx="29" cy="17" rx="3.5" ry="5" fill={color}/>
-    <ellipse cx="50" cy="34" rx="8" ry="7" fill={color}/>
-    <circle cx="50" cy="27" r="6" fill={color}/>
-    <polygon points="46,23 48,18 50,23" fill={color}/>
-    <polygon points="50,23 52,18 54,23" fill={color}/>
-    <path d="M34 32c0 0-3-3-3-5.5c0-1.8 1.6-2.8 3-1c1.4-1.8 3-.8 3 1c0 2.5-3 5.5-3 5.5Z" fill="white" opacity=".9"/>
-    <path d="M50 38c0 0-2.5-2.5-2.5-4.2c0-1.5 1.3-2.3 2.5-.8c1.2-1.5 2.5-.7 2.5.8c0 1.7-2.5 4.2-2.5 4.2Z" fill="white" opacity=".9"/>
-  </svg>
-);
+const LogoSVG=({size=40,color="#5C3D1E"})=>{
+  const wordmark=size>=64;
+  let src=wordmark?BRAND.logoPrimary:BRAND.isotypeBlueYellow;
+  if(color===C.white||color===C.cafeXlt)src=wordmark?BRAND.logoYellow:BRAND.isotypeYellow;
+  if(color===C.ink)src=wordmark?BRAND.logoBlack:BRAND.isotypeBlueYellow;
+  return(
+    <img
+      src={src}
+      alt="DoGood"
+      style={{
+        width:wordmark?size*2.5:size,
+        height:wordmark?size*1.95:size,
+        objectFit:"contain",
+        display:"block",
+      }}
+    />
+  );
+};
 
 function BoneShape({w=86,h=22,color=`${C.cafeXlt}26`,style={}}){
   const r=Math.max(6,Math.round(h*.33));
@@ -331,15 +356,16 @@ function Splash({onDone}){
     return()=>{clearTimeout(t1);clearTimeout(t2);};
   },[]);
   return(
-    <div style={{position:"fixed",inset:0,zIndex:9999,background:C.beige,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:16,
+    <div style={{position:"fixed",inset:0,zIndex:9999,background:C.beige,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:16,overflow:"hidden",
       animation:out?"splashOut .5s ease forwards":"splashFadeIn .3s ease"}}>
+      <div style={{position:"absolute",inset:0,background:`linear-gradient(180deg, rgba(255,255,255,.55), rgba(22,83,187,.08)), url('${BRAND.handBlue}') center/cover no-repeat`,opacity:.22}}/>
       <div style={{animation:"logoPop .9s .2s ease both",opacity:0}}>
-        <LogoSVG size={120} color={C.cafe}/>
+        <LogoSVG size={126} color={C.cafe}/>
       </div>
-      <div style={{fontFamily:"'Fredoka',sans-serif",fontWeight:700,fontSize:"3rem",color:C.cafe,animation:"fadeUp .6s .7s ease both",opacity:0}}>DOGOOD</div>
-      <div style={{fontSize:".95rem",color:C.muted,fontWeight:600,animation:"fadeUp .6s 1s ease both",opacity:0}}>Adopcion responsable para todos</div>
+      <div style={{fontFamily:"'Fredoka',sans-serif",fontWeight:700,fontSize:"3rem",color:C.cafe,animation:"fadeUp .6s .7s ease both",opacity:0,position:"relative",zIndex:1}}>DOGOOD</div>
+      <div style={{fontSize:".95rem",color:C.sub,fontWeight:700,animation:"fadeUp .6s 1s ease both",opacity:0,position:"relative",zIndex:1}}>amor peludo</div>
       <div style={{marginTop:16,display:"flex",gap:8,animation:"fadeUp .4s 1.3s ease both",opacity:0}}>
-        {[0,1,2].map(i=><div key={i} style={{width:8,height:8,borderRadius:"50%",background:C.cafe,animation:`dotPulse 1.2s ${i*.2}s infinite`}}/>)}
+        {[0,1,2].map(i=><div key={i} style={{width:8,height:8,borderRadius:"50%",background:C.cafeLt,animation:`dotPulse 1.2s ${i*.2}s infinite`}}/>)}
       </div>
     </div>
   );
@@ -401,8 +427,7 @@ function Navbar({onLoginClick,onDemoClick}){
             <>
               <div className="nav-main-head">
                 <a href="#" style={{display:"flex",alignItems:"center",gap:10,textDecoration:"none"}}>
-                  <LogoSVG size={32} color={C.cafe}/>
-                  <span className="brand-text" style={{fontFamily:"'Fredoka',sans-serif",fontWeight:700,fontSize:"1.45rem",color:C.cafe}}>DOGOOD</span>
+                  <img src={BRAND.logoPrimary} alt="DoGood" className="brand-text" style={{width:144,height:50,objectFit:"contain",display:"block"}}/>
                 </a>
                 <div className="nav-actions">
                   <button onClick={onDemoClick} className="paw-btn nav-demo-btn" style={{padding:"8px 12px",border:"1px solid #D9C2A8",borderRadius:50,background:C.cream,color:C.cafe,fontWeight:800,fontSize:".78rem",cursor:"pointer"}}>
@@ -428,8 +453,7 @@ function Navbar({onLoginClick,onDemoClick}){
           ):(
             <>
               <a href="#" style={{display:"flex",alignItems:"center",gap:10,textDecoration:"none"}}>
-                <LogoSVG size={36} color={C.cafe}/>
-                <span style={{fontFamily:"'Fredoka',sans-serif",fontWeight:700,fontSize:"1.6rem",color:C.cafe}}>DOGOOD</span>
+                <img src={BRAND.logoPrimary} alt="DoGood" style={{width:160,height:56,objectFit:"contain",display:"block"}}/>
               </a>
               <div className="nav-links" style={{display:"flex",alignItems:"center",gap:4}}>
                 {links.map(([l,h])=>(

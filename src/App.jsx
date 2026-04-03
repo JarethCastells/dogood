@@ -13,28 +13,28 @@ async function apiFetch(endpoint, action, method = "GET", body = null) {
    TOKENS
 ======================================== */
 const T = {
-  bg:       "#E8E4DC",
-  surface:  "#F5F2EC",
-  border:   "#D3CDC2",
-  borderHov:"#B8B0A3",
+  bg:       "#F3EFEF",
+  surface:  "#FFFFFF",
+  border:   "#DDD5D6",
+  borderHov:"#BEB6B7",
 
-  ink:      "#141414",
-  sub:      "#4A4741",
-  muted:    "#6F6B64",
-  faint:    "#A8A195",
+  ink:      "#111111",
+  sub:      "#3C3A3A",
+  muted:    "#6B6868",
+  faint:    "#A9A3A4",
 
-  accent:   "#F3E8DA",      // soft beige
-  accentDk: "#5C3D1E",      // deep coffee
-  accentMd: "#7A5230",      // medium coffee
-  accentLt: "#D4B896",      // light sand
+  accent:   "#EDF3FF",
+  accentDk: "#1653BB",
+  accentMd: "#0F45A2",
+  accentLt: "#F0C21D",
 
-  warm:     "#F9F1E7",      // warm cream
-  warmDk:   "#C2885A",      // terracotta
-  warmLt:   "#FDEBD0",
+  warm:     "#FFF7DA",
+  warmDk:   "#C08912",
+  warmLt:   "#FFF3CD",
 
-  tag1: { bg:"#F3E8DA", col:"#7A5230" },
-  tag2: { bg:"#FFF3CD", col:"#7A5200" },
-  tag3: { bg:"#E8EEF8", col:"#2D4B8A" },
+  tag1: { bg:"#EAF2FF", col:"#1653BB" },
+  tag2: { bg:"#FFF6D8", col:"#8A6400" },
+  tag3: { bg:"#ECF1FB", col:"#2D4B8A" },
   tag4: { bg:"#F9E8E8", col:"#8A2D2D" },
 
   r: {sm:8, md:16, lg:24, xl:32, full:999},
@@ -42,7 +42,7 @@ const T = {
     sm: "0 1px 4px rgba(0,0,0,.06)",
     md: "0 4px 20px rgba(0,0,0,.08)",
     lg: "0 12px 48px rgba(0,0,0,.12)",
-    colored: "0 8px 32px rgba(92,61,30,.18)",
+    colored: "0 8px 32px rgba(22,83,187,.18)",
   }
 };
 
@@ -97,7 +97,20 @@ const PAW_CURSOR = `data:image/svg+xml,${encodeURIComponent(
 )}`;
 
 const G = `
-  @import url('https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+  @font-face{
+    font-family:'Syne';
+    src:url('/brand/AddenRegular.ttf') format('truetype');
+    font-weight:400 900;
+    font-style:normal;
+    font-display:swap;
+  }
+  @font-face{
+    font-family:'Plus Jakarta Sans';
+    src:url('/brand/Futura.ttc') format('truetype-collection');
+    font-weight:300 900;
+    font-style:normal;
+    font-display:swap;
+  }
   *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
   html { height:100%; }
   body {
@@ -306,12 +319,12 @@ const FUN_FACTS = [
   {icon:IC.brain,fact:"Los gatos tienen memoria a largo plazo como ninos de 2 anos.",src:"Animal Cognition"},
 ];
 const GRADIENTS = [
-  "linear-gradient(135deg,#5C3D1E 0%,#A67C52 100%)",
-  "linear-gradient(135deg,#1A3A5C 0%,#4A8CB8 100%)",
-  "linear-gradient(135deg,#5C1A1A 0%,#B84A4A 100%)",
-  "linear-gradient(135deg,#3A1A5C 0%,#8A4AB8 100%)",
-  "linear-gradient(135deg,#5C3A1A 0%,#B88A4A 100%)",
-  "linear-gradient(135deg,#1A5C4A 0%,#4AB8A0 100%)",
+  "linear-gradient(135deg,#1653BB 0%,#4C78CC 100%)",
+  "linear-gradient(135deg,#0F45A2 0%,#1653BB 100%)",
+  "linear-gradient(135deg,#F0C21D 0%,#F8D868 100%)",
+  "linear-gradient(135deg,#1653BB 0%,#F0C21D 100%)",
+  "linear-gradient(135deg,#2B2B2B 0%,#616161 100%)",
+  "linear-gradient(135deg,#7FA5E7 0%,#1653BB 100%)",
 ];
 const DEMO_ANIMALS = [
   {
@@ -843,7 +856,7 @@ export default function DoGood({initialUser=null,onLogout}){
     <div style={{minHeight:"100vh",display:"flex",background:T.bg}}>
       <style>{G}</style>
       {/* Left panel - branding */}
-      <div style={{width:"45%",background:`linear-gradient(160deg, #3A2010 0%, #5C3D1E 40%, #A67C52 100%)`,display:"flex",flexDirection:"column",justifyContent:"space-between",padding:"48px 52px",position:"relative",overflow:"hidden"}}>
+      <div style={{width:"45%",background:`linear-gradient(160deg, #0F45A2 0%, #1653BB 44%, #F0C21D 100%)`,display:"flex",flexDirection:"column",justifyContent:"space-between",padding:"48px 52px",position:"relative",overflow:"hidden"}}>
         {/* Decorative circles */}
         <div style={{position:"absolute",top:-80,right:-80,width:300,height:300,borderRadius:"50%",background:"rgba(255,255,255,.05)"}}/>
         <div style={{position:"absolute",bottom:-60,left:-60,width:240,height:240,borderRadius:"50%",background:"rgba(255,255,255,.04)"}}/>
@@ -975,10 +988,10 @@ export default function DoGood({initialUser=null,onLogout}){
       <aside style={{width:W,minWidth:W,maxWidth:W,background:T.surface,borderRight:`1.5px solid ${T.border}`,display:"flex",flexDirection:"column",position:isMobile?"fixed":"sticky",top:0,left:0,height:"100vh",transition:"width .25s, transform .25s",transform:isMobile&&sideCollapsed?"translateX(-100%)":"translateX(0)",overflow:"hidden",flexShrink:0,zIndex:isMobile?210:1,boxShadow:isMobile?"0 16px 40px rgba(0,0,0,.2)":"none"}}>
         {/* Logo */}
         <div style={{padding:"22px 18px 20px",borderBottom:`1px solid ${T.border}`,display:"flex",alignItems:"center",justifyContent:"space-between",gap:8}}>
-          {!sideCollapsed&&<div style={{fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:"1.4rem",color:"#7A5230",whiteSpace:"nowrap",overflow:"hidden"}}>DoGood</div>}
-          {sideCollapsed&&<div style={{fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:"1.1rem",color:"#7A5230"}}>DG</div>}
+          {!sideCollapsed&&<img src="/brand/logo-primary-trim.png" alt="DoGood" style={{width:126,height:44,objectFit:"contain",display:"block"}}/>}
+          {sideCollapsed&&<img src="/brand/isotype-blueyellow-trim.png" alt="DoGood" style={{width:30,height:30,objectFit:"contain",display:"block"}}/>}
           <button onClick={()=>setSideCollapsed(!sideCollapsed)} style={{width:28,height:28,border:`1.5px solid ${T.border}`,borderRadius:T.r.sm,background:T.bg,cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",fontSize:".75rem",color:T.muted,flexShrink:0,transition:"all .2s"}}
-            onMouseEnter={e=>{e.currentTarget.style.borderColor="#7A5230";e.currentTarget.style.color="#7A5230"}}
+            onMouseEnter={e=>{e.currentTarget.style.borderColor=T.accentDk;e.currentTarget.style.color=T.accentDk}}
             onMouseLeave={e=>{e.currentTarget.style.borderColor=T.border;e.currentTarget.style.color=T.muted}}>
             {sideCollapsed?">":"<"}
           </button>
@@ -989,8 +1002,8 @@ export default function DoGood({initialUser=null,onLogout}){
             const active=page===it.p;
             return(
               <button key={it.p} onClick={()=>goPage(it.p)}
-                style={{width:"100%",padding:sideCollapsed?"10px":"10px 12px",border:"none",borderRadius:T.r.md,background:active?"#F3E8DA":"transparent",color:active?"#7A5230":T.sub,fontWeight:active?700:500,fontSize:".86rem",cursor:"pointer",display:"flex",alignItems:"center",gap:10,transition:"all .15s",justifyContent:sideCollapsed?"center":"flex-start",border:active?`1px solid #D9C2A8`:"1px solid transparent",textAlign:"left"}}
-                onMouseEnter={e=>{if(!active){e.currentTarget.style.background="#FAF3E8";e.currentTarget.style.color=T.ink;}}}
+                style={{width:"100%",padding:sideCollapsed?"10px":"10px 12px",border:"none",borderRadius:T.r.md,background:active?T.accent:"transparent",color:active?T.accentDk:T.sub,fontWeight:active?700:500,fontSize:".86rem",cursor:"pointer",display:"flex",alignItems:"center",gap:10,transition:"all .15s",justifyContent:sideCollapsed?"center":"flex-start",border:active?`1px solid ${T.border}`:"1px solid transparent",textAlign:"left"}}
+                onMouseEnter={e=>{if(!active){e.currentTarget.style.background="#F6FAFF";e.currentTarget.style.color=T.ink;}}}
                 onMouseLeave={e=>{if(!active){e.currentTarget.style.background="transparent";e.currentTarget.style.color=T.sub;}}}>
                 <span style={{fontSize:"1rem",lineHeight:1,flexShrink:0}}>{it.i}</span>
                 {!sideCollapsed&&<span style={{whiteSpace:"nowrap"}}>{it.l}</span>}
@@ -1000,11 +1013,11 @@ export default function DoGood({initialUser=null,onLogout}){
         </nav>
         {/* User */}
         <div ref={userMenuRef} style={{padding:"14px 10px",borderTop:`1px solid ${T.border}`,position:"relative"}}>
-          <button onClick={()=>{if(sideCollapsed){goPage("perfil");return;}setUserMenuOpen(v=>!v);}} style={{width:"100%",padding:sideCollapsed?"10px":"10px 12px",border:"none",borderRadius:T.r.md,background:page==="perfil"?"#F3E8DA":"transparent",cursor:"pointer",display:"flex",alignItems:"center",gap:10,transition:"background .15s",justifyContent:sideCollapsed?"center":"space-between"}}
-            onMouseEnter={e=>{if(page!=="perfil")e.currentTarget.style.background="#FAF3E8"}}
+          <button onClick={()=>{if(sideCollapsed){goPage("perfil");return;}setUserMenuOpen(v=>!v);}} style={{width:"100%",padding:sideCollapsed?"10px":"10px 12px",border:"none",borderRadius:T.r.md,background:page==="perfil"?T.accent:"transparent",cursor:"pointer",display:"flex",alignItems:"center",gap:10,transition:"background .15s",justifyContent:sideCollapsed?"center":"space-between"}}
+            onMouseEnter={e=>{if(page!=="perfil")e.currentTarget.style.background="#F6FAFF"}}
             onMouseLeave={e=>{if(page!=="perfil")e.currentTarget.style.background="transparent"}}>
             <div style={{display:"flex",alignItems:"center",gap:10,minWidth:0}}>
-              <div style={{width:30,height:30,borderRadius:"50%",background:`linear-gradient(135deg,#A67C52,#D4B896)`,color:"#fff",fontWeight:800,display:"flex",alignItems:"center",justifyContent:"center",fontSize:".76rem",flexShrink:0}}>{user.avatar}</div>
+              <div style={{width:30,height:30,borderRadius:"50%",background:`linear-gradient(135deg,${T.accentDk},${T.accentLt})`,color:"#fff",fontWeight:800,display:"flex",alignItems:"center",justifyContent:"center",fontSize:".76rem",flexShrink:0}}>{user.avatar}</div>
               {!sideCollapsed&&<div style={{textAlign:"left",minWidth:0}}>
                 <div style={{fontSize:".8rem",fontWeight:700,color:T.ink,whiteSpace:"nowrap",overflow:"hidden",textOverflow:"ellipsis"}}>{user.nombre.split(" ")[0]}</div>
                 <div style={{fontSize:".7rem",color:T.muted}}>{roleLabel(user.rol)}</div>
@@ -1043,7 +1056,7 @@ export default function DoGood({initialUser=null,onLogout}){
         {page==="home"&&(
           <div style={{animation:"fadeUp .4s ease"}}>
             {/* Hero banner */}
-            <div style={{background:`linear-gradient(135deg, ${T.accentDk} 0%, #7A5230 100%)`,borderRadius:T.r.xl,padding:isMobile?"22px 18px":"40px 44px",marginBottom:24,position:"relative",overflow:"hidden",display:"flex",flexDirection:isMobile?"column":"row",justifyContent:"space-between",alignItems:isMobile?"flex-start":"center",gap:isMobile?14:24}}>
+            <div style={{background:`linear-gradient(135deg, ${T.accentDk} 0%, ${T.accentMd} 62%, ${T.accentLt} 100%)`,borderRadius:T.r.xl,padding:isMobile?"22px 18px":"40px 44px",marginBottom:24,position:"relative",overflow:"hidden",display:"flex",flexDirection:isMobile?"column":"row",justifyContent:"space-between",alignItems:isMobile?"flex-start":"center",gap:isMobile?14:24}}>
               <div style={{position:"absolute",top:-50,right:100,width:200,height:200,borderRadius:"50%",background:"rgba(255,255,255,.06)"}}/>
               <div style={{position:"absolute",bottom:-40,right:20,width:160,height:160,borderRadius:"50%",background:"rgba(255,255,255,.04)"}}/>
               <div style={{position:"relative"}}>
@@ -1512,7 +1525,7 @@ export default function DoGood({initialUser=null,onLogout}){
         {/* PERFIL */}
         {page==="perfil"&&(
           <div>
-            <div style={{background:`linear-gradient(135deg,${T.accentDk},#7A5230)`,borderRadius:T.r.xl,padding:"32px 36px",marginBottom:22,display:"flex",alignItems:"center",gap:20}}>
+            <div style={{background:`linear-gradient(135deg,${T.accentDk},${T.accentMd})`,borderRadius:T.r.xl,padding:"32px 36px",marginBottom:22,display:"flex",alignItems:"center",gap:20}}>
               <div style={{width:64,height:64,borderRadius:"50%",background:"rgba(255,255,255,.2)",color:"#fff",fontFamily:"'Syne',sans-serif",fontWeight:800,fontSize:"1.6rem",display:"flex",alignItems:"center",justifyContent:"center",border:"2.5px solid rgba(255,255,255,.3)",flexShrink:0}}>{user.avatar}</div>
               <div>
                 <div style={{fontFamily:"'Syne',sans-serif",fontSize:"1.6rem",fontWeight:800,color:"#fff"}}>{user.nombre}</div>
